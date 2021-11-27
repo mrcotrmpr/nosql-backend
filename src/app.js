@@ -19,7 +19,12 @@ app.use(morgan('dev'))
 app.use(express.json())
 
 const userRoutes = require('./routes/user.routes')
+const threadRoutes = require('./routes/thread.routes')
+const commentRoutes = require('./routes/comment.routes')
+
 app.use('/user', userRoutes)
+app.use('/thread', threadRoutes)
+app.use('/comment', commentRoutes)
 
 const errors = require('../errors')
 
