@@ -1,0 +1,16 @@
+{
+  "name": "nosql-db-individueel",
+  "version": "1.0.0",
+  "description": "No-SQL back-end using MongoDB and Neo4J -- by mrcotrmpr",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "node": "^17.1.0",
+    "nodemon": "^2.0.15"
+  }
+}
