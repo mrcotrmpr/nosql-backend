@@ -6,7 +6,7 @@ module.exports = {
         const userProps = req.body;
         console.log(userProps);
         await User.create(userProps)
-         .then(user => res.send(user))
+         .then(user => res.status(201).send(user))
          .catch(next);
     },
 
