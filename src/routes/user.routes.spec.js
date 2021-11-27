@@ -9,7 +9,7 @@ describe('user endpoints', function() {
     describe('integration tests', function() {
         it('(POST /user) should create a user', async function() {
             const testUser = {
-                userName: 'username',
+                username: 'username',
                 password: 'password'
             }
 
@@ -18,15 +18,15 @@ describe('user endpoints', function() {
             expect(res).to.have.status(201)
             expect(res.body).to.have.property('_id')
     
-            const user = await User.findOne({userName: testUser.userName})
-            expect(user).to.have.property('userName', testUser.userName)
+            const user = await User.findOne({username: testUser.username})
+            expect(user).to.have.property('username', testUser.username)
             expect(user).to.have.property('password', testUser.password)
             expect(user).to.have.property('friends').and.to.be.empty
         })
 
         it('(POST /user) should create a user with a promise chain', function() {
             const testUser = {
-                userName: 'username',
+                username: 'username',
                 password: 'password'
             }
 
@@ -36,16 +36,16 @@ describe('user endpoints', function() {
                 .then(res => {
                     expect(res).to.have.status(201)
                     expect(res.body).to.have.property('_id')
-                    return User.findOne({userName: testUser.userName})
+                    return User.findOne({username: testUser.username})
                 })
                 .then(user => {
-                    expect(user).to.have.property('userName', testUser.userName)
+                    expect(user).to.have.property('username', testUser.username)
                     expect(user).to.have.property('password', testUser.password)
                     expect(user).to.have.property('friends').and.to.be.empty
                 })
         })
     
-        it('(POST /user) should not create a product with missing userName', async function() {
+        it('(POST /user) should not create a product with missing username', async function() {
             const testUser = {
                 password: 'password'
             }
@@ -60,7 +60,7 @@ describe('user endpoints', function() {
 
         it('(POST /user) should not create a product with missing password', async function() {
             const testUser = {
-                userName: 'username'
+                username: 'username'
             }
     
             const res = await requester.post('/user').send(testUser)
@@ -74,45 +74,45 @@ describe('user endpoints', function() {
 
         it('(POST /user/password) should change the password of a user', async function() {
             const testUser = {
-                userName: 'username',
+                username: 'username',
                 password: 'password'
             }
             await requester.post('/user').send(testUser)
 
             const testUser2 = {
-                userName: 'username',
+                username: 'username',
                 password: 'password',
                 newPassword: 'newPassword'
             }
             const res = await requester.post('/user/password').send(testUser2)
     
             expect(res).to.have.status(200)
-            await User.findOne({userName: testUser.userName})
+            await User.findOne({username: testUser.username})
             .then(user => expect(user.password).to.equal('newPassword'))
         })
 
         it('(POST /user/password) does not work with invalid credentials', async function() {
             const testUser = {
-                userName: 'username',
+                username: 'username',
                 password: 'password'
             }
             await requester.post('/user').send(testUser)
 
             const testUser2 = {
-                userName: 'username',
+                username: 'username',
                 password: 'wrong password',
                 newPassword: 'newPassword'
             }
             const res = await requester.post('/user/password').send(testUser2)
     
             expect(res).to.have.status(401)
-            await User.findOne({userName: testUser.userName})
+            await User.findOne({username: testUser.username})
             .then(user => expect(user.password).to.equal('password'))
         })
 
         it('(delete /user) should delete a user', async function() {
             const testUser = {
-                userName: 'username',
+                username: 'username',
                 password: 'password'
             }
             await requester.post('/user').send(testUser)
@@ -130,7 +130,7 @@ describe('user endpoints', function() {
 
         it('(delete /user) does not work with invalid credentials', async function() {
             const testUser = {
-                userName: 'username',
+                username: 'username',
                 password: 'password'
             }
             await requester.post('/user').send(testUser)
@@ -138,7 +138,7 @@ describe('user endpoints', function() {
             const count = await User.find().countDocuments()
             expect(count).to.equal(1)
             
-            const res = await requester.delete('/user').send({userName:testUser.userName, password:'wrongPassword'})
+            const res = await requester.delete('/user').send({username:testUser.username, password:'wrongPassword'})
     
             expect(res).to.have.status(401)
 
@@ -150,7 +150,7 @@ describe('user endpoints', function() {
     describe('system tests', function() {
         it('should create and retrieve a user', async function() {
             const testUser = {
-                userName: 'username',
+                username: 'username',
                 password: 'password'
             }
 
@@ -162,7 +162,7 @@ describe('user endpoints', function() {
             const res2 = await requester.get(`/user/${id}`)
             expect(res2).to.have.status(200)
             expect(res2.body).to.have.property('_id', id)
-            expect(res2.body).to.have.property('userName', testUser.userName)
+            expect(res2.body).to.have.property('username', testUser.username)
             expect(res2.body).to.have.property('password', testUser.password)
             expect(res2.body).to.have.property('friends').and.to.be.empty
         })
