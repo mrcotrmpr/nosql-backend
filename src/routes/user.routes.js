@@ -15,4 +15,7 @@ router.get('/', userController.getAll)
 // change password
 router.post('/password', userController.changePassword)
 
+// remove user
+router.delete('/', userController.delete)
+
 module.exports = router
