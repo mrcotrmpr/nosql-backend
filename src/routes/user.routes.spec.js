@@ -110,7 +110,7 @@ describe('user endpoints', function() {
             .then(user => expect(user.password).to.equal('password'))
         })
 
-        it('(delete /user) should delete a user', async function() {
+        it('(DELETE /user) should delete a user', async function() {
             const testUser = {
                 username: 'username',
                 password: 'password'
@@ -128,7 +128,7 @@ describe('user endpoints', function() {
             expect(count2).to.equal(0)
         })
 
-        it('(delete /user) does not work with invalid credentials', async function() {
+        it('(DELETE /user) does not work with invalid credentials', async function() {
             const testUser = {
                 username: 'username',
                 password: 'password'
