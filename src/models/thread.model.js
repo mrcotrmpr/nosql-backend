@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
+const _ = require('underscore');
 
 const ThreadSchema = new Schema({
     username: {
@@ -20,15 +21,24 @@ const ThreadSchema = new Schema({
         default: [],
         autopopulate: true,
     }],
-    upvotes: {
-        type: Number,
-        default: 0
-    },
-    downvotes: {
-        type: Number,
-        default: 0
-    }
+    upvotes: [{
+        type: Schema.Types.String,
+        ref: 'user',
+        default: []
+    }],
+    downvotes: [{
+        type: Schema.Types.String,
+        ref: 'user',
+        default: []
+    }],
 })
+
+// check for unique id's in up- and downvotes
+ThreadSchema.pre('save', function (next) {
+    this.upvotes = _.uniq(this.upvotes);
+    this.downvotes = _.uniq(this.downvotes)
+    next();
+  });
 
 // mongoose plugin to always populate fields
 // populate can, in stead of retrieve id's of friends, actually retrieve usernames

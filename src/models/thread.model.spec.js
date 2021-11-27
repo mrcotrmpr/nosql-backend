@@ -32,12 +32,17 @@ describe('thread model', function() {
             expect(thread).to.have.property('comments').and.to.be.empty
         })
 
-        it('should have 0 up- and downvotes by default', async function() {
+        it('should create an empty upvotes list by default', async function() {
             const thread = new Thread({username:'user', title: 'title', content:'content'})
     
-            expect(thread).to.have.property('upvotes').and.to.equal(0)
-            expect(thread).to.have.property('downvotes').and.to.equal(0)
+            expect(thread).to.have.property('upvotes').and.to.be.empty
         })
 
+        it('should create an empty downvotes list by default', async function() {
+            const thread = new Thread({username:'user', title: 'title', content:'content'})
+    
+            expect(thread).to.have.property('downvotes').and.to.be.empty
+        })
+        
     })
 })

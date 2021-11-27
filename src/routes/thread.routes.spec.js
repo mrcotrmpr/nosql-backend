@@ -156,6 +156,86 @@ describe('thread endpoints', function() {
             expect(count2).to.equal(0)
         })
 
+        it('(POST /thread/upvote) should upvote a thread', async function() {
+            const testThread = new Thread ({
+                username: "username",
+                title: "title",
+                content: "content"
+            })
+
+            await testThread.save()
+
+            res = await requester.post('/thread/upvote').send({id: testThread.id, username:'username'})
+            expect(res).to.have.status(200)
+
+            await Thread.findById(testThread.id)
+            .then(thread => expect(thread).to.have.property('upvotes').and.have.lengthOf(1))
+        })
+
+        it('(POST /thread/downvote) should downvote a thread', async function() {
+            const testThread = new Thread ({
+                username: "username",
+                title: "title",
+                content: "content"
+            })
+
+            await testThread.save()
+
+            res = await requester.post('/thread/downvote').send({id: testThread.id, username:'username'})
+            expect(res).to.have.status(200)
+
+            await Thread.findById(testThread.id)
+            .then(thread => expect(thread).to.have.property('downvotes').and.have.lengthOf(1))
+        })
+
+        it('(POST /thread/upvotes) should replace an existing downvote', async function() {
+            const testThread = new Thread ({
+                username: "username",
+                title: "title",
+                content: "content"
+            })
+
+            await testThread.save()
+
+            res = await requester.post('/thread/downvote').send({id: testThread.id, username:'username'})
+            expect(res).to.have.status(200)
+
+            await Thread.findById(testThread.id)
+            .then(thread => expect(thread).to.have.property('downvotes').and.have.lengthOf(1))
+
+            res2 = await requester.post('/thread/upvote').send({id: testThread.id, username:'username'})
+            expect(res).to.have.status(200)
+
+            await Thread.findById(testThread.id)
+            .then(thread => 
+                expect(thread).to.have.property('downvotes').and.have.lengthOf(0) &
+                expect(thread).to.have.property('upvotes').and.have.lengthOf(1))
+        })
+        
+        it('(POST /thread/downvotes) should replace an existing upvote', async function() {
+            const testThread = new Thread ({
+                username: "username",
+                title: "title",
+                content: "content"
+            })
+
+            await testThread.save()
+
+            res = await requester.post('/thread/upvote').send({id: testThread.id, username:'username'})
+            expect(res).to.have.status(200)
+
+            await Thread.findById(testThread.id)
+            .then(thread => expect(thread).to.have.property('upvotes').and.have.lengthOf(1))
+
+            res2 = await requester.post('/thread/downvote').send({id: testThread.id, username:'username'})
+            expect(res).to.have.status(200)
+
+            await Thread.findById(testThread.id)
+            .then(thread => 
+                expect(thread).to.have.property('upvotes').and.have.lengthOf(0) &
+                expect(thread).to.have.property('downvotes').and.have.lengthOf(1))
+        })
+
     describe('system tests', function() {
         it('should create and retrieve a thread', async function() {
             const testThread = {
