@@ -8,7 +8,7 @@ module.exports = {
         await Comment.create(commentProps)
          .then((comment) => {
             Thread.findByIdAndUpdate({_id: comment.threadId}, {$push: {comments: comment._id}}, {upsert: true}, function(err, doc) {
-                return res.status(200).send({message: "Comment created"});
+                return res.status(200).send(comment);
             });
          })
     },
