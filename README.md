@@ -12,6 +12,7 @@ Run `npm install` in the root directory.
 
 ### Running the app
 
+Copy `.env.dist` to a `.env` file and set the variables
 The backend can be started with `npm start`. It will start listening and serve your requests.
 
 ### Running the tests
