@@ -21,6 +21,8 @@ app.use(express.json())
 const userRoutes = require('./routes/user.routes')
 app.use('/user', userRoutes)
 
+const errors = require('../errors')
+
 // catch all not found response
 app.use('*', function(_, res) {
     res.status(404).end()
@@ -32,6 +34,8 @@ app.use('*', function(err, req, res, next) {
     // console.error(err)
     next(err)
 })
+
+app.use('*', errors.handlers)
 
 app.use('*', function(err, req, res, next) {
     res.status(500).json({
