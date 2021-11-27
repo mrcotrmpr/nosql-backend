@@ -109,6 +109,42 @@ describe('user endpoints', function() {
             await User.findOne({userName: testUser.userName})
             .then(user => expect(user.password).to.equal('password'))
         })
+
+        it('(delete /user) should delete a user', async function() {
+            const testUser = {
+                userName: 'username',
+                password: 'password'
+            }
+            await requester.post('/user').send(testUser)
+
+            const count = await User.find().countDocuments()
+            expect(count).to.equal(1)
+            
+            const res = await requester.delete('/user').send(testUser)
+    
+            expect(res).to.have.status(200)
+
+            const count2 = await User.find().countDocuments()
+            expect(count2).to.equal(0)
+        })
+
+        it('(delete /user) does not work with invalid credentials', async function() {
+            const testUser = {
+                userName: 'username',
+                password: 'password'
+            }
+            await requester.post('/user').send(testUser)
+
+            const count = await User.find().countDocuments()
+            expect(count).to.equal(1)
+            
+            const res = await requester.delete('/user').send({userName:testUser.userName, password:'wrongPassword'})
+    
+            expect(res).to.have.status(401)
+
+            const count2 = await User.find().countDocuments()
+            expect(count2).to.equal(1)
+        })
         
 
     describe('system tests', function() {
