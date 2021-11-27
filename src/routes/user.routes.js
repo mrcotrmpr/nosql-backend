@@ -12,4 +12,7 @@ router.get('/:id', userController.getOne)
 // get all users
 router.get('/', userController.getAll)
 
+// change password
+router.post('/password', userController.changePassword)
+
 module.exports = router

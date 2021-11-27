@@ -11,14 +11,29 @@ module.exports = {
     },
 
     async getOne (req, res, next) {
-        const entity = await User.findById(req.params.id)
-        res.status(200).send(entity)
+        const user = await User.findById(req.params.id)
+        res.status(200).send(user)
     },
     
     async getAll(req, res, next){
-        const entities = await User.find()
-        res.status(200).send(entities)
-    }
+        const users = await User.find()
+        res.status(200).send(users)
+    },
 
+    async changePassword(req, res, next){
+        await User.findOne({ userName: req.body.userName, password: req.body.password })
+        .then((user) => {
+            if(!user){
+                res.status(401).send({message: "Invalid credentials"});
+            };
+            if(user){
+                User.findOneAndUpdate({userName: req.body.userName}, {$set: {password: req.body.newPassword}}, {upsert: true}, function(err, doc) {
+                    if (err) return res.send(500, {error: err});
+                    return res.status(200).send({message: "Password changed"});
+                });
+            };
+        })
+    },
+    
 }
 
