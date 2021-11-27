@@ -3,26 +3,23 @@ const express = require('express')
 // this catches an exception in a route handler and calls next with it,
 // so express' error middleware can deal with it
 // saves us a try catch in each route handler
-// note: this will be standard in express 5.0, to be released soon
 require('express-async-errors')
 
 const app = express()
 
-const cors = require('cors')
+// helmet sets headers to avoid common security risks
 const helmet = require('helmet')
+app.use(helmet())
 
+// use morgan for logging
 const morgan = require('morgan')
+app.use(morgan('dev'))
 
 // parse json body of incoming request
 app.use(express.json())
 
-// not the topic of this example, but good to be aware of security issues
-// helmet sets headers to avoid common security risks
-// https://expressjs.com/en/advanced/best-practice-security.html
-app.use(helmet())
-
-// use morgan for logging
-app.use(morgan('dev'))
+const userRoutes = require('./routes/user.routes')
+app.use('/user', userRoutes)
 
 // catch all not found response
 app.use('*', function(_, res) {
