@@ -37,6 +37,14 @@ const SubcommentSchema = new Schema({
 // populate can, in stead of retrieve id's of subcomments, actually retrieve subcomments
 SubcommentSchema.plugin(require('mongoose-autopopulate'));
 
+SubcommentSchema.virtual('count_upvotes').get(function () {
+    return this.upvotes.length
+})
+
+SubcommentSchema.virtual('count_downvotes').get(function () {
+    return this.downvotes.length
+})
+
 const Subcomment = mongoose.model('subcomment', SubcommentSchema);
 
 module.exports = Subcomment;

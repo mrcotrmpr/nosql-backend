@@ -33,6 +33,14 @@ const ThreadSchema = new Schema({
     }]
 })
 
+ThreadSchema.virtual('count_upvotes').get(function () {
+    return this.upvotes.length
+})
+
+ThreadSchema.virtual('count_downvotes').get(function () {
+    return this.downvotes.length
+})
+
 // check for unique id's in up- and downvotes
 ThreadSchema.pre('save', function (next) {
     this.upvotes = _.uniq(this.upvotes);

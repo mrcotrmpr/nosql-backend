@@ -42,7 +42,14 @@ CommentSchema.pre('remove', function(next) {
     const Subcomment = mongoose.model('subcomment')
     Subcomment.remove({commentId: this._id}).exec();
     next();
+})
 
+CommentSchema.virtual('count_upvotes').get(function () {
+    return this.upvotes.length
+})
+
+CommentSchema.virtual('count_downvotes').get(function () {
+    return this.downvotes.length
 })
 
 const Comment = mongoose.model('comment', CommentSchema);
