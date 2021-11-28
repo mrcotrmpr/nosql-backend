@@ -19,8 +19,8 @@ module.exports = {
     connect,
     session,
     dropAll: 'MATCH (n) DETACH DELETE n',
-    saveUser: 'CREATE (u:User {id: $userId})',
-    deleteUser: 'MATCH(u:User {id: $userId}) DETACH DELETE u',
-    followUser: 'MERGE (u1:User {id: $userId}) MERGE (u2:User {id:$userFollowId}) MERGE (u1)-[:FOLLOWS]->(u2)',
-    unfollowUser: 'MATCH(:User {id: $followingUserId})-[r:FOLLOWS]-(:User{id: $followedUserId}) DELETE r'
+    saveUser: 'CREATE (u:User {id: $username})',
+    deleteUser: 'MATCH(u:User {id: $username}) DETACH DELETE u',
+    befriend: 'MERGE (u1:User {id: $username1}) MERGE (u2:User {id:$username2}) MERGE (u1)-[:FRIENDS]->(u2)',
+    defriend: 'MATCH(:User {id: $username1})-[r:FRIENDS]-(:User{id: $username2}) DELETE r'
 }

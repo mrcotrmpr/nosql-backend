@@ -19,7 +19,7 @@ beforeEach(async () => {
     await Promise.all([User.deleteMany(), Thread.deleteMany(), Comment.deleteMany(), Subcomment.deleteMany()])
 
     // clear neo db before each test
-    const session = neo.session()
-    await session.run(neo.dropAll)
-    await session.close()
+    // const session = neo.session()
+    // await session.run(neo.dropAll)
+    // await session.close()
 });

@@ -5,21 +5,17 @@ module.exports = {
 
     async create(req, res, next){
 
-        const user = new User ({
-            username: req.body.username,
-            password: req.body.password
-        })
+        const userProps = req.body;
+        await User.create(userProps)
+         .then(user => {
+            const session = neo.session()
 
-        await user.save()
-
-        const session = neo.session()
-
-        await session.run(neo.saveUser, {
-            userId: user._id.toString(),
-        })
-    
-        res.status(201).send(user)
-
+            session.run(neo.saveUser, {
+                username: user.username.toString(),
+            })
+        
+            res.status(201).send(user)
+         })
     },
 
     async getOne (req, res, next) {
@@ -59,12 +55,46 @@ module.exports = {
                 const session = neo.session()
 
                 session.run(neo.deleteUser, {
-                    userId: user._id.toString(),
+                    username: user.username.toString(),
                 })
             
                 return res.status(200).send({message: req.body.username + " has been removed"})
             };
         })
     },    
+
+    async befriendUser(req, res, next){
+        const username1 = req.body.username1;
+        const username2 = req.body.username2;
+
+        const session = neo.session();
+    
+        await session.run(neo.befriend, {
+            username1: username1.toString(),
+            username2: username2.toString()
+        })
+    
+        session.close()
+        res.status(200).send({message: "friendhsip initialized"});
+        
+    },
+
+    async defriendUser(req, res, next){
+        const username1 = req.body.username1;
+        const username2 = req.body.username2;
+
+        const session = neo.session();
+    
+        await session.run(neo.defriend, {
+            username1: username1.toString(),
+            username2: username2.toString()
+        })
+    
+        session.close()
+        res.status(200).send({message: "friendhsip removed"});
+
+    },
+
 }
+
 

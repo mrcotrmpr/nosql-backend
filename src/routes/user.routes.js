@@ -18,4 +18,10 @@ router.post('/password', userController.changePassword)
 // remove user
 router.delete('/', userController.delete)
 
+// befriend user
+router.post('/befriend', userController.befriendUser)
+
+// defriend user
+router.post('/defriend', userController.defriendUser)
+
 module.exports = router

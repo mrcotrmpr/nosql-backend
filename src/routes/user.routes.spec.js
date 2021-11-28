@@ -120,7 +120,7 @@ describe('user endpoints', function() {
             const count = await User.find().countDocuments()
             expect(count).to.equal(1)
             
-            const res = await requester.delete('/user').send(testUser)
+            const res = await requester.delete('/user').send({username: 'username', password: 'password'})
     
             expect(res).to.have.status(200)
 
