@@ -44,6 +44,13 @@ ThreadSchema.pre('save', function (next) {
 // populate can, in stead of retrieve id's of comments, actually retrieve comments
 ThreadSchema.plugin(require('mongoose-autopopulate'));
 
+// remove all comments on delete
+ThreadSchema.pre('remove', function(next) {
+    const Comment = mongoose.model('comment')
+    Comment.remove({threadId: this._id}).exec();
+    next();
+})
+
 const Thread = mongoose.model('thread', ThreadSchema);
 
 module.exports = Thread;

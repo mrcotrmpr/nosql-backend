@@ -37,6 +37,14 @@ const CommentSchema = new Schema({
 // populate can, in stead of retrieve id's of subcomments, actually retrieve subcomments
 CommentSchema.plugin(require('mongoose-autopopulate'));
 
+// remove all subcomments on delete
+CommentSchema.pre('remove', function(next) {
+    const Subcomment = mongoose.model('subcomment')
+    Subcomment.remove({commentId: this._id}).exec();
+    next();
+
+})
+
 const Comment = mongoose.model('comment', CommentSchema);
 
 module.exports = Comment;
