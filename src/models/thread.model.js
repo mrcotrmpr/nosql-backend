@@ -30,7 +30,7 @@ const ThreadSchema = new Schema({
         type: Schema.Types.String,
         ref: 'user',
         default: []
-    }],
+    }]
 })
 
 // check for unique id's in up- and downvotes

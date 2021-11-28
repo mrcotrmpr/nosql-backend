@@ -188,7 +188,7 @@ describe('thread endpoints', function() {
             .then(thread => expect(thread).to.have.property('downvotes').and.have.lengthOf(1))
         })
 
-        it('(POST /thread/upvotes) should replace an existing downvote', async function() {
+        it('(POST /thread/upvote) should replace an existing downvote', async function() {
             const testThread = new Thread ({
                 username: "username",
                 title: "title",
@@ -212,7 +212,7 @@ describe('thread endpoints', function() {
                 expect(thread).to.have.property('upvotes').and.have.lengthOf(1))
         })
         
-        it('(POST /thread/downvotes) should replace an existing upvote', async function() {
+        it('(POST /thread/downvote) should replace an existing upvote', async function() {
             const testThread = new Thread ({
                 username: "username",
                 title: "title",

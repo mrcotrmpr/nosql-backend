@@ -21,14 +21,16 @@ const CommentSchema = new Schema({
         default: [],
         autopopulate: true,
     }],
-    upvotes: {
-        type: Number,
-        default: 0
-    },
-    downvotes: {
-        type: Number,
-        default: 0
-    }
+    upvotes: [{
+        type: Schema.Types.String,
+        ref: 'user',
+        default: []
+    }],
+    downvotes: [{
+        type: Schema.Types.String,
+        ref: 'user',
+        default: []
+    }]
 })
 
 // mongoose plugin to always populate fields

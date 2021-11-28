@@ -15,4 +15,10 @@ router.get('/', commentController.getAll)
 // remove a comment
 router.delete('/', commentController.delete)
 
+// upvote a comment
+router.post('/upvote', commentController.upvote)
+
+// downvote a comment
+router.post('/downvote', commentController.downvote)
+
 module.exports = router

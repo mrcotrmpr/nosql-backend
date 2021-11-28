@@ -32,11 +32,16 @@ describe('comment model', function() {
             expect(comment).to.have.property('subcomments').and.to.be.empty
         })
 
-        it('should have 0 up- and downvotes by default', async function() {
+        it('should create an empty upvotes list by default', async function() {
             const comment = new Comment({threadId: 'id', username: 'username', content:'content'})
     
-            expect(comment).to.have.property('upvotes').and.to.equal(0)
-            expect(comment).to.have.property('downvotes').and.to.equal(0)
+            expect(comment).to.have.property('upvotes').and.to.be.empty
+        })
+
+        it('should create an empty downvotes list by default', async function() {
+            const comment = new Comment({threadId: 'id', username: 'username', content:'content'})
+    
+            expect(comment).to.have.property('downvotes').and.to.be.empty
         })
 
     })

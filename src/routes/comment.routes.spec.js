@@ -113,13 +113,126 @@ describe('comment endpoints', function() {
             })
 
             await testComment.save()
-            
+
             await requester.delete('/comment').send({id: testComment.id})
             
             const count = await Comment.find().countDocuments()
             expect(count).to.equal(0)
 
         })
+
+        it('(POST /comment/upvote) should upvote a comment', async function() {
+            const testThread = new Thread ({
+                username: "username",
+                title: "title",
+                content: "content"
+            })
+
+            await testThread.save()
+
+            const testComment = new Comment({
+                threadId: testThread.id,
+                username: "username of the comment",
+                content: "content of the comment"
+            })
+
+            await testComment.save()
+
+            res = await requester.post('/comment/upvote').send({id: testComment.id, username:'username'})
+            expect(res).to.have.status(200)
+
+            await Comment.findById(testComment.id)
+            .then(comment => expect(comment).to.have.property('upvotes').and.have.lengthOf(1))
+        })
+
+        it('(POST /comment/downvote) should downvote a comment', async function() {
+            const testThread = new Thread ({
+                username: "username",
+                title: "title",
+                content: "content"
+            })
+
+            await testThread.save()
+
+            const testComment = new Comment({
+                threadId: testThread.id,
+                username: "username of the comment",
+                content: "content of the comment"
+            })
+
+            await testComment.save()
+
+            res = await requester.post('/comment/downvote').send({id: testComment.id, username:'username'})
+            expect(res).to.have.status(200)
+
+            await Comment.findById(testComment.id)
+            .then(comment => expect(comment).to.have.property('downvotes').and.have.lengthOf(1))
+        })
+
+        it('(POST /comment/upvote) should replace an existing downvote', async function() {
+            const testThread = new Thread ({
+                username: "username",
+                title: "title",
+                content: "content"
+            })
+
+            await testThread.save()
+
+            const testComment = new Comment({
+                threadId: testThread.id,
+                username: "username of the comment",
+                content: "content of the comment"
+            })
+
+            await testComment.save()
+
+            res = await requester.post('/comment/downvote').send({id: testComment.id, username:'username'})
+            expect(res).to.have.status(200)
+
+            await Comment.findById(testComment.id)
+            .then(comment => expect(comment).to.have.property('downvotes').and.have.lengthOf(1))
+
+            res2 = await requester.post('/comment/upvote').send({id: testComment.id, username:'username'})
+            expect(res).to.have.status(200)
+
+            await Comment.findById(testComment.id)
+            .then(comment => 
+                expect(comment).to.have.property('downvotes').and.have.lengthOf(0) &
+                expect(comment).to.have.property('upvotes').and.have.lengthOf(1))
+        })
+
+        it('(POST /comment/downvote) should replace an existing upvote', async function() {
+            const testThread = new Thread ({
+                username: "username",
+                title: "title",
+                content: "content"
+            })
+
+            await testThread.save()
+
+            const testComment = new Comment({
+                threadId: testThread.id,
+                username: "username of the comment",
+                content: "content of the comment"
+            })
+
+            await testComment.save()
+
+            res = await requester.post('/comment/upvote').send({id: testComment.id, username:'username'})
+            expect(res).to.have.status(200)
+
+            await Comment.findById(testComment.id)
+            .then(comment => expect(comment).to.have.property('upvotes').and.have.lengthOf(1))
+
+            res2 = await requester.post('/comment/downvote').send({id: testComment.id, username:'username'})
+            expect(res).to.have.status(200)
+
+            await Comment.findById(testComment.id)
+            .then(comment => 
+                expect(comment).to.have.property('upvotes').and.have.lengthOf(0) &
+                expect(comment).to.have.property('downvotes').and.have.lengthOf(1))
+        })
+
 
     describe('system tests', function() {
         it('should create and retrieve a comment', async function() {
