@@ -26,7 +26,7 @@ app.use('/user', userRoutes)
 app.use('/thread', threadRoutes)
 app.use('/comment', commentRoutes)
 
-const errors = require('../errors')
+const errors = require('./errors')
 
 // catch all not found response
 app.use('*', function(_, res) {
