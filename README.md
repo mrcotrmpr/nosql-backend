@@ -2,9 +2,9 @@
 
 ### About
 
-This is a backend which uses a combination of MongoDB and Neo4j. 
-
-![image](https://user-images.githubusercontent.com/55551559/143718416-8af39e7c-4603-4f8d-b012-ef75b2d0c355.png)
+This is a reddit-like backend which uses a combination of MongoDB and Neo4j. 
+Users can be created which can create threads, which can have comments. Comments can also have subcomments, up- and downvotes.
+Users are also saved in a Neo4J database in which they can follow and unfollow eachother.
 
 ### Installing
 
