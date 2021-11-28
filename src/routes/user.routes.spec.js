@@ -21,7 +21,6 @@ describe('user endpoints', function() {
             const user = await User.findOne({username: testUser.username})
             expect(user).to.have.property('username', testUser.username)
             expect(user).to.have.property('password', testUser.password)
-            expect(user).to.have.property('friends').and.to.be.empty
         })
 
         it('(POST /user) should create a user with a promise chain', function() {
@@ -41,7 +40,6 @@ describe('user endpoints', function() {
                 .then(user => {
                     expect(user).to.have.property('username', testUser.username)
                     expect(user).to.have.property('password', testUser.password)
-                    expect(user).to.have.property('friends').and.to.be.empty
                 })
         })
     
@@ -164,7 +162,6 @@ describe('user endpoints', function() {
             expect(res2.body).to.have.property('_id', id)
             expect(res2.body).to.have.property('username', testUser.username)
             expect(res2.body).to.have.property('password', testUser.password)
-            expect(res2.body).to.have.property('friends').and.to.be.empty
         })
     })
 })

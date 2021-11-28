@@ -21,6 +21,6 @@ module.exports = {
     dropAll: 'MATCH (n) DETACH DELETE n',
     saveUser: 'CREATE (u:User {id: $username})',
     deleteUser: 'MATCH(u:User {id: $username}) DETACH DELETE u',
-    befriend: 'MERGE (u1:User {id: $username1}) MERGE (u2:User {id:$username2}) MERGE (u1)-[:FRIENDS]->(u2)',
+    befriend: 'MERGE (u1:User {id: $username1}) MERGE (u2:User {id:$username2}) MERGE (u1)-[:FRIENDS]-(u2)',
     defriend: 'MATCH(:User {id: $username1})-[r:FRIENDS]-(:User{id: $username2}) DELETE r'
 }

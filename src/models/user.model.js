@@ -10,13 +10,7 @@ const UserSchema = new Schema({
     password: {
         type: String,
         required: [true, 'A user needs to have a password.'],
-    },
-    friends: [{
-        type: Schema.Types.ObjectId,
-        ref: 'user',
-        default: [],
-        autopopulate: true,
-    }],
+    }
 })
 
 // mongoose plugin to always populate fields

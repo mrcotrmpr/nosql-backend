@@ -46,7 +46,7 @@ module.exports = {
         await User.findOne({ username: req.body.username, password: req.body.password })
         .then((user) => {
             if(!user){
-                res.status(204).send({message: "Invalid credentials"});
+                res.status(204).send();
             };
 
             if(user){
@@ -67,34 +67,56 @@ module.exports = {
         const username1 = req.body.username1;
         const username2 = req.body.username2;
 
-        const session = neo.session();
+        if(username1 == username2){
+            res.status(403).send({message: "usernames cannot be the same"});
+        } else {
+            const user1 = await User.findOne({username: username1})
+            const user2 = await User.findOne({username: username2})
+
+            if(user1 != null && user2 != null){
+
+                const session = neo.session();
     
-        await session.run(neo.befriend, {
-            username1: username1.toString(),
-            username2: username2.toString()
-        })
-    
-        session.close()
-        res.status(200).send({message: "friendhsip initialized"});
-        
+                await session.run(neo.befriend, {
+                    username1: username1.toString(),
+                    username2: username2.toString()
+                })
+            
+                session.close()
+                res.status(200).send({message: "friendhsip initialized"});
+
+            } else {
+                res.status(204).send();
+            }
+        }
     },
 
     async defriendUser(req, res, next){
         const username1 = req.body.username1;
         const username2 = req.body.username2;
 
-        const session = neo.session();
-    
-        await session.run(neo.defriend, {
-            username1: username1.toString(),
-            username2: username2.toString()
-        })
-    
-        session.close()
-        res.status(200).send({message: "friendhsip removed"});
+        if(username1 == username2){
+            res.status(403).send({message: "usernames cannot be the same"});
+        } else {
+            const user1 = await User.findOne({username: username1})
+            const user2 = await User.findOne({username: username2})
 
+            if(user1 != null && user2 != null){
+
+                const session = neo.session();
+    
+                await session.run(neo.defriend, {
+                    username1: username1.toString(),
+                    username2: username2.toString()
+                })
+            
+                session.close()
+                res.status(200).send({message: "friendhsip removed"});
+
+            } else {
+                res.status(204).send();
+            }
+        }
     },
 
 }
-
-
