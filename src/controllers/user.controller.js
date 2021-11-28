@@ -1,13 +1,25 @@
 const User = require('../models/user.model')
+const neo = require('../../neo')
 
 module.exports = {
 
     async create(req, res, next){
-        const userProps = req.body;
-        console.log(userProps);
-        await User.create(userProps)
-         .then(user => res.status(201).send(user))
-         .catch(next);
+
+        const user = new User ({
+            username: req.body.username,
+            password: req.body.password
+        })
+
+        await user.save()
+
+        const session = neo.session()
+
+        await session.run(neo.saveUser, {
+            userId: user._id.toString(),
+        })
+    
+        res.status(201).send(user)
+
     },
 
     async getOne (req, res, next) {
@@ -40,8 +52,16 @@ module.exports = {
             if(!user){
                 res.status(204).send({message: "Invalid credentials"});
             };
+
             if(user){
                 user.delete()
+
+                const session = neo.session()
+
+                session.run(neo.deleteUser, {
+                    userId: user._id.toString(),
+                })
+            
                 return res.status(200).send({message: req.body.username + " has been removed"})
             };
         })
