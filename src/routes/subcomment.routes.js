@@ -12,6 +12,9 @@ router.get('/:id', subcommentController.getOne)
 // get all subcomment
 router.get('/', subcommentController.getAll)
 
+// remove a subcomment
+router.delete('/', subcommentController.delete)
+
 // create a subcomment of a subcomment
 router.post('/self', subcommentController.createSelf)
 

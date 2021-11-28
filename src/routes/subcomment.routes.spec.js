@@ -89,6 +89,39 @@ describe('comment endpoints', function() {
             })
         })
 
+        
+        it('(DELETE /subcomment) should delete a subcomment', async function() {
+            testThread = await new Thread ({
+                username: "username",
+                title: "title",
+                content: "content"
+            }).save()
+            
+            testComment = await new Comment ({
+                threadId: testThread.id,
+                username: "username of the comment",
+                content: "content of the comment"
+            }).save()
+
+            const testSubcomment = new Subcomment ({
+                commentId: testComment.id,
+                content: "content of the comment",
+                username: "username"
+            })
+    
+            await testSubcomment.save()
+
+            const count = await Subcomment.find().countDocuments()
+            expect(count).to.equal(1)
+            
+            const res = await requester.delete('/subcomment').send({id: testSubcomment.id})
+    
+            expect(res).to.have.status(200)
+
+            const count2 = await Subcomment.find().countDocuments()
+            expect(count2).to.equal(0)
+        })
+
         it('(POST /subcomment/upvote) should upvote a comment', async function() {
             const testThread = new Thread ({
                 username: "username",

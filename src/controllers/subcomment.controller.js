@@ -23,6 +23,21 @@ module.exports = {
         res.status(200).send(subcomments)
     },
 
+    async delete(req, res, next){
+        await Subcomment.findOne({ _id: req.body.id })
+        .then((subcomment) => {
+            if(!subcomment){
+                res.status(204).send({message: "Subcomment with id" + req.body.id + " was not found"});
+            };
+            if(subcomment){
+                subcomment.delete()
+                .then(() => {
+                    return res.status(200).send({message: "Subcomment deleted"});
+                 })
+            };
+        })
+    },
+
     async createSelf(req, res, next){
         const subcommentProps = req.body;
         await Subcomment.create(subcommentProps)
