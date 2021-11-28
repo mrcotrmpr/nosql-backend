@@ -64,7 +64,7 @@ describe('thread endpoints', function() {
             expect(count).to.equal(0)
         })
 
-        it('(POST /thread) should not create a product with missing username', async function() {
+        it('(POST /thread) should not create a thread with missing username', async function() {
             const testThread = {
                 title: "title",
                 content: "content"
@@ -79,7 +79,7 @@ describe('thread endpoints', function() {
             })
         })
 
-        it('(POST /thread) should not create a product with missing content', async function() {
+        it('(POST /thread) should not create a thread with missing content', async function() {
             const testThread = {
                 username: "username",
                 title: "title",

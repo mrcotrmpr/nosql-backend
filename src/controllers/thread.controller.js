@@ -24,7 +24,7 @@ module.exports = {
         await Thread.findOne({ _id: req.body.id })
         .then((thread) => {
             if(!thread){
-                res.status(401).send({message: "Thread was not found"});
+                res.status(204).send({message: "Thread was not found"});
             };
             if(thread){
                 Thread.findOneAndUpdate({_id: req.body.id}, {$set: {content: req.body.content}}, {upsert: true}, function(err, doc) {
@@ -38,7 +38,7 @@ module.exports = {
         await Thread.findOne({ _id: req.body.id })
         .then((thread) => {
             if(!thread){
-                res.status(401).send({message: "Thread with id" + req.body.id + " was not found"});
+                res.status(204).send({message: "Thread with id" + req.body.id + " was not found"});
             };
             if(thread){
                 thread.delete()
@@ -51,7 +51,7 @@ module.exports = {
         await Thread.findOne({ _id: req.body.id })
         .then((thread) => {    
             if(!thread){
-                res.status(401).send({message: "Thread with id" + req.body.id + " was not found"});
+                res.status(204).send({message: "Thread with id" + req.body.id + " was not found"});
             };
             if(thread.upvotes.includes(req.body.username)){
                 return res.status(405).send({message: "you can only upvote once"});
@@ -71,7 +71,7 @@ module.exports = {
         await Thread.findOne({ _id: req.body.id })
         .then((thread) => {    
             if(!thread){
-                res.status(401).send({message: "Thread with id" + req.body.id + " was not found"});
+                res.status(204).send({message: "Thread with id" + req.body.id + " was not found"});
             };
             if(thread.downvotes.includes(req.body.username)){
                 return res.status(405).send({message: "you can only downvote once"});

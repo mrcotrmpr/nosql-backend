@@ -45,7 +45,7 @@ describe('user endpoints', function() {
                 })
         })
     
-        it('(POST /user) should not create a product with missing username', async function() {
+        it('(POST /user) should not create a user with missing username', async function() {
             const testUser = {
                 password: 'password'
             }
@@ -58,7 +58,7 @@ describe('user endpoints', function() {
             expect(count).to.equal(0)
         })
 
-        it('(POST /user) should not create a product with missing password', async function() {
+        it('(POST /user) should not create a user with missing password', async function() {
             const testUser = {
                 username: 'username'
             }
@@ -105,7 +105,7 @@ describe('user endpoints', function() {
             }
             const res = await requester.post('/user/password').send(testUser2)
     
-            expect(res).to.have.status(401)
+            expect(res).to.have.status(204)
             await User.findOne({username: testUser.username})
             .then(user => expect(user.password).to.equal('password'))
         })
@@ -140,7 +140,7 @@ describe('user endpoints', function() {
             
             const res = await requester.delete('/user').send({username:testUser.username, password:'wrongPassword'})
     
-            expect(res).to.have.status(401)
+            expect(res).to.have.status(204)
 
             const count2 = await User.find().countDocuments()
             expect(count2).to.equal(1)

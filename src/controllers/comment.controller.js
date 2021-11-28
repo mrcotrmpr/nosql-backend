@@ -7,10 +7,14 @@ module.exports = {
         const commentProps = req.body;
         await Comment.create(commentProps)
          .then((comment) => {
+            if(Thread.findById(comment.threadId)){
             Thread.findByIdAndUpdate({_id: comment.threadId}, {$push: {comments: comment._id}}, {upsert: true}, function(err, doc) {
                 return res.status(200).send(comment);
             });
-         })
+            } else {
+                return res.status(204).send({message: "invalid thread id"});
+            }
+        })
     },
 
     async getOne (req, res, next) {
@@ -27,7 +31,7 @@ module.exports = {
         await Comment.findOne({ _id: req.body.id })
         .then((comment) => {
             if(!comment){
-                res.status(401).send({message: "Comment with id" + req.body.id + " was not found"});
+                res.status(204).send({message: "Comment with id" + req.body.id + " was not found"});
             };
             if(comment){
                 comment.delete()
@@ -44,7 +48,7 @@ module.exports = {
         await Comment.findOne({ _id: req.body.id })
         .then((comment) => {    
             if(!comment){
-                res.status(401).send({message: "Comment with id" + req.body.id + " was not found"});
+                res.status(204).send({message: "Comment with id" + req.body.id + " was not found"});
             };
             if(comment.upvotes.includes(req.body.username)){
                 return res.status(405).send({message: "you can only upvote once"});
@@ -64,7 +68,7 @@ module.exports = {
         await Comment.findOne({ _id: req.body.id })
         .then((comment) => {    
             if(!comment){
-                res.status(401).send({message: "Comment with id" + req.body.id + " was not found"});
+                res.status(204).send({message: "Comment with id" + req.body.id + " was not found"});
             };
             if(comment.downvotes.includes(req.body.username)){
                 return res.status(405).send({message: "you can only downvote once"});

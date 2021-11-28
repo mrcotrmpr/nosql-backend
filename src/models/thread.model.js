@@ -41,7 +41,7 @@ ThreadSchema.pre('save', function (next) {
   });
 
 // mongoose plugin to always populate fields
-// populate can, in stead of retrieve id's of friends, actually retrieve usernames
+// populate can, in stead of retrieve id's of comments, actually retrieve comments
 ThreadSchema.plugin(require('mongoose-autopopulate'));
 
 const Thread = mongoose.model('thread', ThreadSchema);

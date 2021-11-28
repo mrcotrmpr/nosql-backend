@@ -1,19 +1,19 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const CommentSchema = new Schema({
-    threadId: {
+const SubcommentSchema = new Schema({
+    commentId: {
         type: Schema.Types.ObjectId,
-        ref: 'thread',
-        required: [true, 'A comment needs a valid thread id']
+        ref: 'comment',
+        required: [true, 'A subcomment needs a valid comment id']
     },
     username: {
         type: String,
-        required: [true, 'A comment needs to have a username.'],
+        required: [true, 'A subcomment needs to have a username.'],
     },
     content: {
         type: String,
-        required: [true, 'A comment needs to have content.'],
+        required: [true, 'A subcomment needs to have content.'],
     },
     subcomments: [{
         type: Schema.Types.ObjectId,
@@ -35,8 +35,8 @@ const CommentSchema = new Schema({
 
 // mongoose plugin to always populate fields
 // populate can, in stead of retrieve id's of subcomments, actually retrieve subcomments
-CommentSchema.plugin(require('mongoose-autopopulate'));
+SubcommentSchema.plugin(require('mongoose-autopopulate'));
 
-const Comment = mongoose.model('comment', CommentSchema);
+const Subcomment = mongoose.model('subcomment', SubcommentSchema);
 
-module.exports = Comment;
+module.exports = Subcomment;
