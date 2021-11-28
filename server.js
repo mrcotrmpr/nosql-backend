@@ -11,3 +11,4 @@ app.listen(port, () => {
 })
 
 connect.mongo(process.env.MONGO_PROD_DB)
+connect.neo(process.env.NEO4J_PROD_DB)

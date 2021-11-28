@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const neo_driver = require('./neo')
 
 // these options are to not let mongoose use deprecated features of the mongo driver
 const options = {
@@ -15,6 +16,16 @@ async function mongo(dbName) {
     }
 }
 
+function neo(dbName) {
+    try {
+        neo_driver.connect(dbName)
+        console.log(`connection to neo DB ${dbName} established`)
+    } catch (err) {
+        console.error(err)
+    }
+}
+
 module.exports = {
-    mongo
+    mongo,
+    neo
 }
