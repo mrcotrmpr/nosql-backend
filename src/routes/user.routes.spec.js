@@ -103,27 +103,25 @@ describe('user endpoints', function() {
             }
             const res = await requester.post('/user/password').send(testUser2)
     
-            expect(res).to.have.status(204)
+            expect(res).to.have.status(401)
             await User.findOne({username: testUser.username})
             .then(user => expect(user.password).to.equal('password'))
         })
 
         it('(DELETE /user) should delete a user', async function() {
-            const testUser = {
+            const testUser = new User ({
                 username: 'username',
                 password: 'password'
-            }
-            await requester.post('/user').send(testUser)
-
-            const count = await User.find().countDocuments()
-            expect(count).to.equal(1)
-            
+            })
+    
+            await testUser.save()
+    
             const res = await requester.delete('/user').send({username: 'username', password: 'password'})
     
-            expect(res).to.have.status(200)
-
-            const count2 = await User.find().countDocuments()
-            expect(count2).to.equal(0)
+            expect(res).to.have.status(204)
+    
+            const user = await User.findOne({username: testUser.name})
+            expect(user).to.be.null
         })
 
         it('(DELETE /user) does not work with invalid credentials', async function() {
@@ -138,7 +136,7 @@ describe('user endpoints', function() {
             
             const res = await requester.delete('/user').send({username:testUser.username, password:'wrongPassword'})
     
-            expect(res).to.have.status(204)
+            expect(res).to.have.status(401)
 
             const count2 = await User.find().countDocuments()
             expect(count2).to.equal(1)

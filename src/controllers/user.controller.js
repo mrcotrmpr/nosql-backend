@@ -32,7 +32,7 @@ module.exports = {
         await User.findOne({ username: req.body.username, password: req.body.password })
         .then((user) => {
             if(!user){
-                res.status(204).send({message: "Invalid credentials"});
+                res.status(401).send({message: "Invalid credentials"});
             };
             if(user){
                 User.findOneAndUpdate({username: req.body.username}, {$set: {password: req.body.newPassword}}, {upsert: true}, function(err, doc) {
@@ -46,7 +46,7 @@ module.exports = {
         await User.findOne({ username: req.body.username, password: req.body.password })
         .then((user) => {
             if(!user){
-                res.status(204).send();
+                res.status(401).send({message: "Invalid credentials"});
             };
 
             if(user){
@@ -58,7 +58,7 @@ module.exports = {
                     username: user.username.toString(),
                 })
             
-                return res.status(200).send({message: req.body.username + " has been removed"})
+                return res.status(204).send({message: req.body.username + " has been removed"})
             };
         })
     },    

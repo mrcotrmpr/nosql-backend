@@ -145,15 +145,12 @@ describe('thread endpoints', function() {
             })
 
             await testThread.save()
-
-            const count = await Thread.find().countDocuments()
-            expect(count).to.equal(1)
-
-            const res = await requester.delete('/thread').send({id: testThread.id})
+    
+            const res = await requester.delete('/thread').send({id: testThread.id})    
             expect(res).to.have.status(200)
 
-            const count2 = await Thread.find().countDocuments()
-            expect(count2).to.equal(0)
+            const thread = await Thread.findOne({content: testThread.content})
+            expect(thread).to.be.null
         })
 
         it('(POST /thread/upvote) should upvote a thread', async function() {

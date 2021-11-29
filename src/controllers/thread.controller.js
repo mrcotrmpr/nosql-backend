@@ -1,13 +1,21 @@
 const Thread = require('../models/thread.model')
+const neo = require('../../neo')
 
 module.exports = {
 
     async create(req, res, next){
+
         const threadProps = req.body;
-        console.log(threadProps);
         await Thread.create(threadProps)
-         .then(thread => res.status(201).send(thread))
-         .catch(next);
+         .then(thread => {
+            const session = neo.session()
+
+            session.run(neo.saveThread, {
+                threadId: thread.id.toString(),
+            })
+        
+            res.status(201).send(thread)
+         })
     },
 
     async getOne (req, res, next) {
@@ -16,7 +24,7 @@ module.exports = {
     },
     
     async getAll(req, res, next){
-        const threads = await Thread.find()
+        const threads = await Thread.find().select('-comments');
         res.status(200).send(threads)
     },
 
@@ -42,6 +50,13 @@ module.exports = {
             };
             if(thread){
                 thread.delete()
+
+                const session = neo.session()
+
+                session.run(neo.deleteThread, {
+                    threadId: thread.id.toString(),
+                })
+            
                 return res.status(200).send({message: "Thread with id" + req.body.id + " has been removed"})
             };
         })
