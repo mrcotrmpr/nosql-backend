@@ -122,11 +122,17 @@ module.exports = {
     async getRecommendations(req, res, next){
         const session = neo.session()
 
-        r = await session.run(neo.getLikedFromFriends, {
+        const result = await session.run(neo.getLikedFromFriends, {
             username: req.body.username.toString()
         })
 
-        res.status(200).send(r);
+        const recommendations = []
+        for(let record of result.records) {
+            recommendations.push(record.get('t').properties.id)
+        }
+   
+       session.close()
+       res.status(200).send(recommendations);
 
     }
 
