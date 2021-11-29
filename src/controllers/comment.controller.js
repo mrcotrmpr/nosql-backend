@@ -52,7 +52,7 @@ module.exports = {
             };
             if(comment.upvotes.includes(req.body.username)){
                 return res.status(405).send({message: "you can only upvote once"});
-            }
+    }
             if(!comment.upvotes.includes(req.body.username)){
                 if(comment.downvotes.includes(req.body.username)){
                     Comment.findByIdAndUpdate({_id: req.body.id}, {$pull: {downvotes: req.body.username}}, {upsert: true}, function(){})

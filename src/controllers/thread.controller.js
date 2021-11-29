@@ -55,7 +55,7 @@ module.exports = {
             };
             if(thread.upvotes.includes(req.body.username)){
                 return res.status(405).send({message: "you can only upvote once"});
-            }
+    }
             if(!thread.upvotes.includes(req.body.username)){
                 if(thread.downvotes.includes(req.body.username)){
                     Thread.findByIdAndUpdate({_id: req.body.id}, {$pull: {downvotes: req.body.username}}, {upsert: true}, function(){})

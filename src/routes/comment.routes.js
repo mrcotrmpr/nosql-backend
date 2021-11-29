@@ -1,6 +1,10 @@
 const express = require('express')
 const router = express.Router()
 
+const Comment = require('../models/comment.model')
+const GenericController = require('../controllers/generic.controller');
+
+const commentGenericController = new GenericController(Comment)
 const commentController = require('../controllers/comment.controller');
 
 // create a comment
@@ -16,9 +20,9 @@ router.get('/', commentController.getAll)
 router.delete('/', commentController.delete)
 
 // upvote a comment
-router.post('/upvote', commentController.upvote)
+router.post('/upvote', commentGenericController.upvote)
 
 // downvote a comment
-router.post('/downvote', commentController.downvote)
+router.post('/downvote', commentGenericController.downvote)
 
 module.exports = router

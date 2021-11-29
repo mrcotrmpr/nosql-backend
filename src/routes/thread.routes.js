@@ -1,6 +1,10 @@
 const express = require('express')
 const router = express.Router()
 
+const Thread = require('../models/thread.model')
+const GenericController = require('../controllers/generic.controller');
+
+const threadGenericController = new GenericController(Thread)
 const threadController = require('../controllers/thread.controller');
 
 // create a thread
@@ -19,9 +23,9 @@ router.put('/', threadController.edit)
 router.delete('/', threadController.delete)
 
 // upvote thread
-router.post('/upvote', threadController.upvote)
+router.post('/upvote', threadGenericController.upvote)
 
 // downvote thread
-router.post('/downvote', threadController.downvote)
+router.post('/downvote', threadGenericController.downvote)
 
 module.exports = router
