@@ -60,5 +60,58 @@ module.exports = {
                 return res.status(200).send({message: "Thread with id" + req.body.id + " has been removed"})
             };
         })
-    }
+    },
+
+    async upvote(req, res, next){
+        await Thread.findOne({ _id: req.body.id })
+        .then((thread) => {    
+            if(!thread){
+                res.status(401).send({message: "Thread with id" + req.body.id + " was not found"});
+            };
+            if(thread.upvotes.includes(req.body.username)){
+                return res.status(405).send({message: "you can only upvote once"});
+            }
+            if(!thread.upvotes.includes(req.body.username)){
+                const session = neo.session()
+
+                if(thread.downvotes.includes(req.body.username)){
+                    Thread.findByIdAndUpdate({_id: req.body.id}, {$pull: {downvotes: req.body.username}}, {upsert: true}, function(){})
+                }
+                Thread.findByIdAndUpdate({_id: req.body.id}, {$push: {upvotes: req.body.username}}, {upsert: true}, function(err, doc) {
+                    session.run(neo.likeThread, {
+                        username: req.body.username,
+                        threadId: req.body.id
+                    })
+                    return res.status(200).send({message: "upvote added"});
+                });          
+            };
+        })
+    },
+
+    async downvote(req, res, next){
+        await Thread.findOne({ _id: req.body.id })
+        .then((thread) => {    
+            if(!thread){
+                res.status(401).send({message: "Thread with id" + req.body.id + " was not found"});
+            };
+            if(thread.downvotes.includes(req.body.username)){
+                return res.status(405).send({message: "you can only downvote once"});
+            }
+            if(!thread.downvotes.includes(req.body.username)){
+                const session = neo.session()
+
+                if(thread.upvotes.includes(req.body.username)){
+                    Thread.findByIdAndUpdate({_id: req.body.id}, {$pull: {upvotes: req.body.username}}, {upsert: true}, function() {})
+                }
+                Thread.findByIdAndUpdate({_id: req.body.id}, {$push: {downvotes: req.body.username}}, {upsert: true}, function(err, doc) {
+                    session.run(neo.dislikeThread, {
+                        username: req.body.username,
+                        threadId: req.body.id
+                    })
+                    return res.status(200).send({message: "downvote added"});
+                });          
+            };
+        })
+    }   
+
 }

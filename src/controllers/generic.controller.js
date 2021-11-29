@@ -6,6 +6,8 @@ class GenericController {
     }
 
     upvote = async (req, res, next) => {
+        const session = neo.session()
+
         await this.model.findOne({ _id: req.body.id })
         .then((entity) => {    
             if(!entity){
@@ -26,6 +28,8 @@ class GenericController {
     }
 
     downvote = async (req, res, next) => {
+        const session = neo.session()
+
         await this.model.findOne({ _id: req.body.id })
         .then((entity) => {    
             if(!entity){
@@ -43,7 +47,7 @@ class GenericController {
                 });          
             };
         })
-    } 
+    }
 
 }
 
