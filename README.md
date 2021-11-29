@@ -21,3 +21,13 @@ To run all tests use `npm test`. There are three kinds of tests:
 - unit tests on the schemas
 - integration tests on the endpoints
 - system tests by walking through a 'user journey'
+
+### TODO:
+
+- Set up neo4j tests
+- Save likes and dislikes to neo4j db (along with threads)
+- Show up- and downvotes as a count
+- Filter (up- and downvotes, amount of comments)
+- Remove subcomments when removing a thread along with its comments
+- Be able to query threads your friends liked (depth 1 and 2)
+- Richardson maturity level 2
