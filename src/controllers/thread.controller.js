@@ -12,6 +12,7 @@ module.exports = {
 
             session.run(neo.saveThread, {
                 threadId: thread.id.toString(),
+                threadTitle: thread.title.toString()
             })
         
             res.status(201).send(thread)

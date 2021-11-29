@@ -128,7 +128,7 @@ module.exports = {
 
         const recommendations = []
         for(let record of result.records) {
-            recommendations.push(record.get('t').properties.id)
+            recommendations.push(record.get('t').properties.name)
         }
    
        session.close()
