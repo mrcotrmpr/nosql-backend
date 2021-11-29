@@ -119,4 +119,15 @@ module.exports = {
         }
     },
 
+    async getRecommendations(req, res, next){
+        const session = neo.session()
+
+        r = await session.run(neo.getLikedFromFriends, {
+            username: req.body.username.toString()
+        })
+
+        res.status(200).send(r);
+
+    }
+
 }

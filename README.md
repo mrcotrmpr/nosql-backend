@@ -25,7 +25,6 @@ To run all tests use `npm test`. There are three kinds of tests:
 ### TODO:
 
 - Set up neo4j tests
-- Save likes and dislikes to neo4j db (along with threads)
 - Show up- and downvotes as a count
 - Filter (up- and downvotes, amount of comments)
 - Remove subcomments when removing a thread along with its comments

@@ -12,6 +12,9 @@ router.get('/:id', userController.getOne)
 // get all users
 router.get('/', userController.getAll)
 
+// get liked threads from friends
+router.post('/recommendations', userController.getRecommendations)
+
 // change password
 router.post('/password', userController.changePassword)
 
