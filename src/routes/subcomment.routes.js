@@ -1,6 +1,10 @@
 const express = require('express')
 const router = express.Router()
 
+const Subomment = require('../models/subcomment.model')
+const GenericController = require('../controllers/generic.controller');
+
+const subcommentGenericController = new GenericController(Subomment)
 const subcommentController = require('../controllers/subcomment.controller');
 
 // create a subcomment
@@ -19,9 +23,9 @@ router.delete('/', subcommentController.delete)
 router.post('/self', subcommentController.createSelf)
 
 // upvote a subcomment
-router.post('/upvote', subcommentController.upvote)
+router.post('/upvote', subcommentGenericController.upvote)
 
 // downvote a subcomment
-router.post('/downvote', subcommentController.downvote)
+router.post('/downvote', subcommentGenericController.downvote)
 
 module.exports = router
