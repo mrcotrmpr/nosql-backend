@@ -2,11 +2,26 @@ const chai = require('chai')
 const expect = chai.expect
 
 const requester = require('../../requester.spec')
+const neo = require('../../neo')
 
 const User = require('../models/user.model')
 
+function createQueries() {
+    return [
+        'CREATE (u:User {id: "username1"})',
+        'CREATE (u:User {id: "username2"})',
+        'CREATE (u:User {id: "username3"})',
+        'CREATE (t:Thread {id: "thread1", name:"test thread 1"})',
+        'CREATE (t:Thread {id: "thread2", name:"test thread 2"})',
+        'MERGE (u1:User {id: "username1"}) MERGE (u2:User {id:"username2"}) MERGE (u1)-[:FRIENDS]-(u2)',
+        'MERGE (u:User {id: "username2"}) MERGE (t:Thread {id:"thread1"}) MERGE (u)-[:LIKES]->(t)'
+    ]
+}
+
+
 describe('user endpoints', function() {
     describe('integration tests', function() {
+
         it('(POST /user) should create a user', async function() {
             const testUser = {
                 username: 'username',
@@ -140,6 +155,29 @@ describe('user endpoints', function() {
 
             const count2 = await User.find().countDocuments()
             expect(count2).to.equal(1)
+        })
+
+        before(async function() {
+            const session = neo.session()
+            for (let query of createQueries()) {
+                await session.run(query)
+            }
+            session.close()
+        }),
+
+        it('(POST user/recommendations) gives simple recommendations', async function() {
+            const res = await requester.post('/user/recommendations').send({username: "username1"})
+
+            expect(res.body).to.have.have.property("recommendations").and.to.be.lengthOf(1)
+            expect(res).to.have.status(200)
+            expect(res.body).to.have.have.property("recommendations").and.to.contain("test thread 1")
+        })
+
+        it('(POST user/recommendations) with no recommendations returns an empty list', async function() {
+            const res = await requester.post('/user/recommendations').send({username: "username2"})
+
+            expect(res).to.have.status(200)
+            expect(res.body).to.have.have.property("recommendations").and.to.be.lengthOf(0)
         })
         
 

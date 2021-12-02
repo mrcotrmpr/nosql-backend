@@ -12,9 +12,6 @@ router.get('/:id', userController.getOne)
 // get all users
 router.get('/', userController.getAll)
 
-// get liked threads from friends
-router.post('/recommendations', userController.getRecommendations)
-
 // change password
 router.post('/password', userController.changePassword)
 
@@ -26,5 +23,8 @@ router.post('/befriend', userController.befriendUser)
 
 // defriend user
 router.post('/defriend', userController.defriendUser)
+
+// get liked threads from friends
+router.post('/recommendations', userController.getRecommendations)
 
 module.exports = router

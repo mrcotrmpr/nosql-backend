@@ -132,7 +132,7 @@ module.exports = {
         }
    
        session.close()
-       res.status(200).send(recommendations);
+       res.status(200).send({recommendations: recommendations});
 
     }
 
