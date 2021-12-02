@@ -118,7 +118,7 @@ module.exports = {
     async filterQuery(req, res, next){
 
         if(req.body.filter == "upvotes"){
-            result = await Thread.find().sort({"upvotes": -1})
+            result = await Thread.find().sort({"upvotes": -1}).select('-comments')
             return res.status(200).send(result)
         }
 
