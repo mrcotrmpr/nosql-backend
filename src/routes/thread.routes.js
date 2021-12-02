@@ -24,4 +24,7 @@ router.post('/upvote', threadController.upvote)
 // downvote thread
 router.post('/downvote', threadController.downvote)
 
+// filter threads
+router.post('/filter', threadController.filterQuery)
+
 module.exports = router

@@ -113,6 +113,24 @@ module.exports = {
                 });          
             };
         })
-    }   
+    },
+
+    async filterQuery(req, res, next){
+
+        if(req.body.filter == "upvotes"){
+            result = await Thread.find().sort({"upvotes": -1})
+            return res.status(200).send(result)
+        }
+
+        if(req.body.filter == "comments"){
+            result = await Thread.find().sort({"comments": -1})
+            return res.status(200).send(result)
+        }
+
+        else {
+            return res.status(401).send({message: "filter not found"});
+        }
+
+    }
 
 }
