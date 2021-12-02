@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const _ = require('underscore');
 
+const opts = { toJSON: { virtuals: true, transform: function (doc, ret) { delete ret.id }}};
 const ThreadSchema = new Schema({
     username: {
         type: String,
@@ -30,8 +31,8 @@ const ThreadSchema = new Schema({
         type: Schema.Types.String,
         ref: 'user',
         default: []
-    }]
-})
+        }]
+}, opts)
 
 ThreadSchema.virtual('count_upvotes').get(function () {
     return this.upvotes.length

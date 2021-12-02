@@ -24,9 +24,8 @@ To run all tests use `npm test`. There are three kinds of tests:
 
 ### TODO:
 
-- Set up neo4j tests
-- Show up- and downvotes as a count
 - Filter (up- and downvotes, amount of comments)
 - Remove subcomments when removing a thread along with its comments
 - Be able to query threads your friends liked (depth 2)
 - Richardson maturity level 2
+- Make tests prettier

@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
+const opts = { toJSON: { virtuals: true, transform: function (doc, ret) { delete ret.id }}};
 const CommentSchema = new Schema({
     threadId: {
         type: Schema.Types.ObjectId,
@@ -30,8 +31,8 @@ const CommentSchema = new Schema({
         type: Schema.Types.String,
         ref: 'user',
         default: []
-    }]
-})
+        }]
+}, opts)
 
 // mongoose plugin to always populate fields
 // populate can, in stead of retrieve id's of subcomments, actually retrieve subcomments
