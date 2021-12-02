@@ -28,10 +28,10 @@ module.exports = {
     },
 
     async delete(req, res, next){
-        await Comment.findOne({ _id: req.body.id })
+        await Comment.findOne({ _id: req.params.id })
         .then((comment) => {
             if(!comment){
-                res.status(204).send({message: "Comment with id" + req.body.id + " was not found"});
+                res.status(204).send({message: "Comment with id" + req.params.id + " was not found"});
             };
             if(comment){
                 comment.delete()

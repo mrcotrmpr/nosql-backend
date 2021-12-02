@@ -24,10 +24,10 @@ module.exports = {
     },
 
     async delete(req, res, next){
-        await Subcomment.findOne({ _id: req.body.id })
+        await Subcomment.findOne({ _id: req.params.id })
         .then((subcomment) => {
             if(!subcomment){
-                res.status(204).send({message: "Subcomment with id" + req.body.id + " was not found"});
+                res.status(204).send({message: "Subcomment with id" + req.params.id + " was not found"});
             };
             if(subcomment){
                 subcomment.delete()

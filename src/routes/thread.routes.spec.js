@@ -137,7 +137,7 @@ describe('thread endpoints', function() {
             .then(thread => expect(thread.title).to.equal('original title'))
         })
 
-        xit('(DELETE /thread) should delete a thread', async function() {
+        it('(DELETE /thread/:id) should delete a thread', async function() {
             const testThread = new Thread ({
                 username: "username",
                 title: "title",
@@ -146,7 +146,7 @@ describe('thread endpoints', function() {
 
             await testThread.save()
     
-            const res = await requester.delete('/thread').send({id: testThread.id})    
+            const res = await requester.delete(`/thread/${testThread.id}`)   
             expect(res).to.have.status(200)
 
             const thread = await Thread.findOne({content: testThread.content})

@@ -10,24 +10,6 @@ const Thread = require('../models/thread.model')
 describe('comment endpoints', function() {
     describe('integration tests', function() {
 
-        let testComment
-        let testThread
-
-        beforeEach(async function() {
-            testThread = await new Thread ({
-                username: "username",
-                title: "title",
-                content: "content"
-            }).save()
-            
-            testComment = await new Comment ({
-                threadId: testThread.id,
-                username: "username of the comment",
-                content: "content of the comment"
-            }).save()
-            console.log(testComment)
-        })
-            
         it('(POST /subcomment) should create a subcomment', async function() {
             const testSubcomment = {
                 commentId: testComment.id,
@@ -90,7 +72,7 @@ describe('comment endpoints', function() {
         })
 
         
-        it('(DELETE /subcomment) should delete a subcomment', async function() {
+        it('(DELETE /subcomment/:id) should delete a subcomment', async function() {
             testThread = await new Thread ({
                 username: "username",
                 title: "title",
@@ -114,7 +96,7 @@ describe('comment endpoints', function() {
             const count = await Subcomment.find().countDocuments()
             expect(count).to.equal(1)
             
-            const res = await requester.delete('/subcomment').send({id: testSubcomment.id})
+            const res = await requester.delete(`/subcomment/${testSubcomment.id}`)
     
             expect(res).to.have.status(200)
 

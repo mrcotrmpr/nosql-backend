@@ -108,7 +108,7 @@ describe('user endpoints', function() {
             .then(user => expect(user.password).to.equal('password'))
         })
 
-        xit('(DELETE /user) should delete a user', async function() {
+        it('(DELETE /user) should delete a user', async function() {
             const testUser = new User ({
                 username: 'username',
                 password: 'password'

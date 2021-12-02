@@ -97,7 +97,7 @@ describe('comment endpoints', function() {
             
         })
 
-        it('(DELETE /comment) should delete a comment', async function() {
+        it('(DELETE /comment/:id) should delete a comment', async function() {
             const testThread = new Thread ({
                 username: "username",
                 title: "title",
@@ -114,7 +114,7 @@ describe('comment endpoints', function() {
 
             await testComment.save()
 
-            await requester.delete('/comment').send({id: testComment.id})
+            await requester.delete(`/comment/${testComment.id}`)
             
             const count = await Comment.find().countDocuments()
             expect(count).to.equal(0)

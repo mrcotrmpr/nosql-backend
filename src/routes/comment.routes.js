@@ -17,7 +17,7 @@ router.get('/:id', commentController.getOne)
 router.get('/', commentController.getAll)
 
 // remove a comment
-router.delete('/', commentController.delete)
+router.delete('/:id', commentController.delete)
 
 // upvote a comment
 router.post('/upvote', commentGenericController.upvote)

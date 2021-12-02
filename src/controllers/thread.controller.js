@@ -44,10 +44,10 @@ module.exports = {
     },
 
     async delete(req, res, next){
-        await Thread.findOne({ _id: req.body.id })
+        await Thread.findOne({ _id: req.params.id })
         .then((thread) => {
             if(!thread){
-                res.status(204).send({message: "Thread with id" + req.body.id + " was not found"});
+                res.status(204).send({message: "Thread with id" + req.params.id + " was not found"});
             };
             if(thread){
                 thread.delete()
@@ -58,7 +58,7 @@ module.exports = {
                     threadId: thread.id.toString(),
                 })
             
-                return res.status(200).send({message: "Thread with id" + req.body.id + " has been removed"})
+                return res.status(200).send({message: "Thread with id" + req.params.id + " has been removed"})
             };
         })
     },
