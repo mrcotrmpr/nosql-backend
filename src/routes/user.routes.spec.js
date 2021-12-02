@@ -165,6 +165,47 @@ describe('user endpoints', function() {
             session.close()
         }),
 
+        it('(POST user/befriend) returns correct message', async function() {
+            const testUser1 = new User ({
+                username: 'testusername1',
+                password: 'password'
+            })
+
+            await testUser1.save()
+
+            const testUser2 = new User ({
+                username: 'testusername2',
+                password: 'password'
+            })
+
+            await testUser2.save()
+
+            const res = await requester.post('/user/befriend').send({username1: "testusername1", username2: "testusername2"})
+
+            expect(res.body).to.have.have.property("message").and.to.equal("friendship initialized")
+            expect(res).to.have.status(200)
+        })
+
+        it('(POST user/defriend) returns correct message', async function() {
+            const testUser1 = new User ({
+                username: 'testusername1',
+                password: 'password'
+            })
+
+            await testUser1.save()
+
+            const testUser2 = new User ({
+                username: 'testusername2',
+                password: 'password'
+            })
+
+            await testUser2.save()
+            const res = await requester.post('/user/defriend').send({username1: "testusername1", username2: "testusername2"})
+
+            expect(res.body).to.have.have.property("message").and.to.equal("friendship removed")
+            expect(res).to.have.status(200)
+        })
+
         it('(POST user/recommendations) gives simple recommendations', async function() {
             const res = await requester.post('/user/recommendations').send({username: "username1"})
 

@@ -83,7 +83,7 @@ module.exports = {
                 })
             
                 session.close()
-                res.status(200).send({message: "friendhsip initialized"});
+                res.status(200).send({message: "friendship initialized"});
 
             } else {
                 res.status(204).send();
@@ -111,7 +111,7 @@ module.exports = {
                 })
             
                 session.close()
-                res.status(200).send({message: "friendhsip removed"});
+                res.status(200).send({message: "friendship removed"});
 
             } else {
                 res.status(204).send();
