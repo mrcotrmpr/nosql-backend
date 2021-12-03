@@ -4,6 +4,7 @@ const expect = chai.expect
 const requester = require('../../requester.spec')
 
 const Thread = require('../models/thread.model')
+const User = require('../models/user.model')
 
 describe('thread endpoints', function() {
     describe('integration tests', function() {
@@ -154,15 +155,20 @@ describe('thread endpoints', function() {
         })
 
         it('(POST /thread/upvote) should upvote a thread', async function() {
+            const testUser = await new User({
+                username: 'thread_test_username',
+                password: 'password'            
+            }).save()
+
             const testThread = new Thread ({
-                username: "username",
+                username: testUser.username,
                 title: "title",
                 content: "content"
             })
 
             await testThread.save()
 
-            res = await requester.post('/thread/upvote').send({id: testThread.id, username:'username'})
+            res = await requester.post('/thread/upvote').send({id: testThread.id, username:testUser.username})
             expect(res).to.have.status(200)
 
             await Thread.findById(testThread.id)
@@ -170,15 +176,20 @@ describe('thread endpoints', function() {
         })
 
         it('(POST /thread/downvote) should downvote a thread', async function() {
+            const testUser = await new User({
+                username: 'thread_test_username',
+                password: 'password'            
+            }).save()
+
             const testThread = new Thread ({
-                username: "username",
+                username: testUser.username,
                 title: "title",
                 content: "content"
             })
 
             await testThread.save()
 
-            res = await requester.post('/thread/downvote').send({id: testThread.id, username:'username'})
+            res = await requester.post('/thread/downvote').send({id: testThread.id, username:testUser.username})
             expect(res).to.have.status(200)
 
             await Thread.findById(testThread.id)
@@ -186,21 +197,26 @@ describe('thread endpoints', function() {
         })
 
         it('(POST /thread/upvote) should replace an existing downvote', async function() {
+            const testUser = await new User({
+                username: 'thread_test_username',
+                password: 'password'            
+            }).save()
+
             const testThread = new Thread ({
-                username: "username",
+                username: testUser.username,
                 title: "title",
                 content: "content"
             })
 
             await testThread.save()
 
-            res = await requester.post('/thread/downvote').send({id: testThread.id, username:'username'})
+            res = await requester.post('/thread/downvote').send({id: testThread.id, username:testUser.username})
             expect(res).to.have.status(200)
 
             await Thread.findById(testThread.id)
             .then(thread => expect(thread).to.have.property('downvotes').and.have.lengthOf(1))
 
-            res2 = await requester.post('/thread/upvote').send({id: testThread.id, username:'username'})
+            res2 = await requester.post('/thread/upvote').send({id: testThread.id, username:testUser.username})
             expect(res).to.have.status(200)
 
             await Thread.findById(testThread.id)
@@ -210,21 +226,26 @@ describe('thread endpoints', function() {
         })
         
         it('(POST /thread/downvote) should replace an existing upvote', async function() {
+            const testUser = await new User({
+                username: 'thread_test_username',
+                password: 'password'            
+            }).save()
+
             const testThread = new Thread ({
-                username: "username",
+                username: testUser.username,
                 title: "title",
                 content: "content"
             })
 
             await testThread.save()
 
-            res = await requester.post('/thread/upvote').send({id: testThread.id, username:'username'})
+            res = await requester.post('/thread/upvote').send({id: testThread.id, username:testUser.username})
             expect(res).to.have.status(200)
 
             await Thread.findById(testThread.id)
             .then(thread => expect(thread).to.have.property('upvotes').and.have.lengthOf(1))
 
-            res2 = await requester.post('/thread/downvote').send({id: testThread.id, username:'username'})
+            res2 = await requester.post('/thread/downvote').send({id: testThread.id, username:testUser.username})
             expect(res).to.have.status(200)
 
             await Thread.findById(testThread.id)

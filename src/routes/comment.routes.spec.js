@@ -5,6 +5,7 @@ const requester = require('../../requester.spec')
 
 const Comment = require('../models/comment.model')
 const Thread = require('../models/thread.model')
+const User = require('../models/user.model')
 
 describe('comment endpoints', function() {
     describe('integration tests', function() {
@@ -122,8 +123,14 @@ describe('comment endpoints', function() {
         })
 
         it('(POST /comment/upvote) should upvote a comment', async function() {
+
+            const testUser = await new User({
+                username: 'comment_test_username',
+                password: 'password'            
+            }).save()
+
             const testThread = new Thread ({
-                username: "username",
+                username: testUser.username,
                 title: "title",
                 content: "content"
             })
@@ -132,13 +139,13 @@ describe('comment endpoints', function() {
 
             const testComment = new Comment({
                 threadId: testThread.id,
-                username: "username of the comment",
+                username: testUser.username,
                 content: "content of the comment"
             })
 
             await testComment.save()
 
-            res = await requester.post('/comment/upvote').send({id: testComment.id, username:'username'})
+            res = await requester.post('/comment/upvote').send({id: testComment.id, username:testUser.username})
             expect(res).to.have.status(200)
 
             await Comment.findById(testComment.id)
@@ -146,8 +153,14 @@ describe('comment endpoints', function() {
         })
 
         it('(POST /comment/downvote) should downvote a comment', async function() {
+
+            const testUser = await new User({
+                username: 'comment_test_username',
+                password: 'password'            
+            }).save()
+
             const testThread = new Thread ({
-                username: "username",
+                username: testUser.username,
                 title: "title",
                 content: "content"
             })
@@ -156,13 +169,13 @@ describe('comment endpoints', function() {
 
             const testComment = new Comment({
                 threadId: testThread.id,
-                username: "username of the comment",
+                username: testUser.username,
                 content: "content of the comment"
             })
 
             await testComment.save()
 
-            res = await requester.post('/comment/downvote').send({id: testComment.id, username:'username'})
+            res = await requester.post('/comment/downvote').send({id: testComment.id, username:testUser.username})
             expect(res).to.have.status(200)
 
             await Comment.findById(testComment.id)
@@ -170,8 +183,14 @@ describe('comment endpoints', function() {
         })
 
         it('(POST /comment/upvote) should replace an existing downvote', async function() {
+
+            const testUser = await new User({
+                username: 'comment_test_username',
+                password: 'password'            
+            }).save()
+
             const testThread = new Thread ({
-                username: "username",
+                username: testUser.username,
                 title: "title",
                 content: "content"
             })
@@ -180,19 +199,19 @@ describe('comment endpoints', function() {
 
             const testComment = new Comment({
                 threadId: testThread.id,
-                username: "username of the comment",
+                username: testUser.username,
                 content: "content of the comment"
             })
 
             await testComment.save()
 
-            res = await requester.post('/comment/downvote').send({id: testComment.id, username:'username'})
+            res = await requester.post('/comment/downvote').send({id: testComment.id, username: testUser.username})
             expect(res).to.have.status(200)
 
             await Comment.findById(testComment.id)
             .then(comment => expect(comment).to.have.property('downvotes').and.have.lengthOf(1))
 
-            res2 = await requester.post('/comment/upvote').send({id: testComment.id, username:'username'})
+            res2 = await requester.post('/comment/upvote').send({id: testComment.id, username:testUser.username})
             expect(res).to.have.status(200)
 
             await Comment.findById(testComment.id)
@@ -202,8 +221,14 @@ describe('comment endpoints', function() {
         })
 
         it('(POST /comment/downvote) should replace an existing upvote', async function() {
+
+            const testUser = await new User({
+                username: 'comment_test_username',
+                password: 'password'            
+            }).save()
+
             const testThread = new Thread ({
-                username: "username",
+                username: testUser.username,
                 title: "title",
                 content: "content"
             })
@@ -218,13 +243,13 @@ describe('comment endpoints', function() {
 
             await testComment.save()
 
-            res = await requester.post('/comment/upvote').send({id: testComment.id, username:'username'})
+            res = await requester.post('/comment/upvote').send({id: testComment.id, username:testUser.username})
             expect(res).to.have.status(200)
 
             await Comment.findById(testComment.id)
             .then(comment => expect(comment).to.have.property('upvotes').and.have.lengthOf(1))
 
-            res2 = await requester.post('/comment/downvote').send({id: testComment.id, username:'username'})
+            res2 = await requester.post('/comment/downvote').send({id: testComment.id, username:testUser.username})
             expect(res).to.have.status(200)
 
             await Comment.findById(testComment.id)

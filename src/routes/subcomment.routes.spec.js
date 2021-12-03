@@ -6,6 +6,7 @@ const requester = require('../../requester.spec')
 const Subcomment = require('../models/subcomment.model')
 const Comment = require('../models/comment.model')
 const Thread = require('../models/thread.model')
+const User = require('../models/user.model')
 
 describe('comment endpoints', function() {
     describe('integration tests', function() {
@@ -105,8 +106,13 @@ describe('comment endpoints', function() {
         })
 
         it('(POST /subcomment/upvote) should upvote a comment', async function() {
+            const testUser = await new User({
+                username: 'subcomment_test_username',
+                password: 'password'            
+            }).save()
+
             const testThread = new Thread ({
-                username: "username",
+                username: testUser.username,
                 title: "title",
                 content: "content"
             })
@@ -115,7 +121,7 @@ describe('comment endpoints', function() {
 
             const testComment = new Comment({
                 threadId: testThread.id,
-                username: "username of the comment",
+                username: testUser.username,
                 content: "content of the comment"
             })
 
@@ -123,22 +129,27 @@ describe('comment endpoints', function() {
 
             const testSubcomment = new Subcomment({
                 commentId: testComment.id,
-                username: "username of the comment",
+                username: testUser.username,
                 content: "content of the comment"
             })
 
             await testSubcomment.save()
 
-            res = await requester.post('/subcomment/upvote').send({id: testSubcomment.id, username:'username'})
+            res = await requester.post('/subcomment/upvote').send({id: testSubcomment.id, username:testUser.username})
             expect(res).to.have.status(200)
 
             await Subcomment.findById(testSubcomment.id)
             .then(subcomment => expect(subcomment).to.have.property('upvotes').and.have.lengthOf(1))
         })
 
-        it('(POST /comment/downvote) should downvote a comment', async function() {
+        it('(POST /subcomment/downvote) should downvote a comment', async function() {
+            const testUser = await new User({
+                username: 'subcomment_test_username',
+                password: 'password'            
+            }).save()
+
             const testThread = new Thread ({
-                username: "username",
+                username: testUser.username,
                 title: "title",
                 content: "content"
             })
@@ -147,7 +158,7 @@ describe('comment endpoints', function() {
 
             const testComment = new Comment({
                 threadId: testThread.id,
-                username: "username of the comment",
+                username: testUser.username,
                 content: "content of the comment"
             })
 
@@ -155,13 +166,13 @@ describe('comment endpoints', function() {
 
             const testSubcomment = new Subcomment({
                 commentId: testComment.id,
-                username: "username of the comment",
+                username: testUser.username,
                 content: "content of the comment"
             })
 
             await testSubcomment.save()
 
-            res = await requester.post('/subcomment/downvote').send({id: testSubcomment.id, username:'username'})
+            res = await requester.post('/subcomment/downvote').send({id: testSubcomment.id, username:testUser.username})
             expect(res).to.have.status(200)
 
             await Subcomment.findById(testSubcomment.id)
