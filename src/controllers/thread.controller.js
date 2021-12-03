@@ -128,18 +128,58 @@ module.exports = {
 
     async filterQuery(req, res, next){
 
-        if(req.body.filter == "upvotes"){
+        filters = ["upvotes", "diff", "comments"]
+
+        if(req.body.filter == filters[0]){
             result = await Thread.find().sort({"count_upvotes": -1}).select('-comments')
             return res.status(200).send(result)
         }
 
-        if(req.body.filter == "diff"){
-            result = await Thread.find().sort({"count_upvotes": -1}).select('-comments')
-            return res.status(200).send(result)
+        if(req.body.filter == filters[1]){
+            Thread.aggregate(
+                [
+                    { "$project": {
+                        "_id": 1,
+                        "username": 1,
+                        "title": 1,
+                        "content": 1,
+                        "upvotes": 1,
+                        "downvotes": 1,
+                        "count_upvotes": 1,
+                        "count_downvotes": 1,
+                        "diff": { $subtract: [ "$count_upvotes", "$count_downvotes" ] }
+                    }},
+                    { "$sort": { "diff": -1 } }
+                ],
+                function(err,results) {
+                    return res.status(200).send(results)
+                }
+            )
         }
 
+        if(req.body.filter == filters[2]){
+            Thread.aggregate(
+                [
+                    { "$project": {
+                        "_id": 1,
+                        "username": 1,
+                        "title": 1,
+                        "content": 1,
+                        "upvotes": 1,
+                        "downvotes": 1,
+                        "count_upvotes": 1,
+                        "count_downvotes": 1,
+                        "comments": { "$size": "$comments" }
+                    }},
+                    { "$sort": { "comments": -1 } }
+                ],
+                function(err,results) {
+                    return res.status(200).send(results)
+                }
+            )
+        }
 
-        else {
+        else if(!filters.includes(req.body.filter)) {
             return res.status(401).send({message: "filter not found"});
         }
 

@@ -24,8 +24,8 @@ To run all tests use `npm test`. There are three kinds of tests:
 
 ### TODO:
 
-- Filter (diff votes, amount of comments)
 - Remove subcomments when removing a thread along with its comments
 - Be able to query threads your friends liked (depth 2)
 - Richardson maturity level 2
 - Make tests prettier
+- Test filter

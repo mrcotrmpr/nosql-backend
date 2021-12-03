@@ -252,7 +252,124 @@ describe('thread endpoints', function() {
             .then(thread => 
                 expect(thread).to.have.property('upvotes').and.have.lengthOf(0) &
                 expect(thread).to.have.property('downvotes').and.have.lengthOf(1))
-        })
+        }),
+
+        it('(POST /thread/filter) should filter correctly on upvotes', async function() {
+
+            const testUser = await new User({
+                username: 'thread_test_username',
+                password: 'password'            
+            }).save()
+
+            const testThread = await new Thread ({
+                username: testUser.username,
+                title: "good title",
+                content: "content"
+            }).save()
+
+            const testThread2 = await new Thread ({
+                username: testUser.username,
+                title: "bad title",
+                content: "content"
+            }).save()
+
+            res = await requester.post('/thread/upvote').send({id: testThread.id, username:testUser.username})
+            expect(res).to.have.status(200)
+
+            res2 = await requester.post('/thread/filter').send({filter: "upvotes"})
+            expect(res2).to.have.status(200)
+            expect(res2.body[0].title).to.equal("good title")
+            expect(res2.body[1].title).to.equal("bad title")
+
+        }),
+
+        it('(POST /thread/filter) should filter correctly on difference of votes', async function() {
+
+            const testUser = await new User({
+                username: 'thread_test_username1',
+                password: 'password'            
+            }).save()
+
+            const testUser2 = await new User({
+                username: 'thread_test_username2',
+                password: 'password'            
+            }).save()
+
+            const testUser3 = await new User({
+                username: 'thread_test_username3',
+                password: 'password'            
+            }).save()
+
+            const testThread = await new Thread ({
+                username: testUser.username,
+                title: "good title",
+                content: "content"
+            }).save()
+
+            const testThread2 = await new Thread ({
+                username: testUser.username,
+                title: "bad title",
+                content: "content"
+            }).save()
+
+            res = await requester.post('/thread/upvote').send({id: testThread.id, username:testUser.username})
+            expect(res).to.have.status(200)
+            res = await requester.post('/thread/upvote').send({id: testThread.id, username:testUser2.username})
+            expect(res).to.have.status(200)
+            res = await requester.post('/thread/downvote').send({id: testThread.id, username:testUser3.username})
+            expect(res).to.have.status(200)
+
+            res2 = await requester.post('/thread/filter').send({filter: "diff"})
+            expect(res2).to.have.status(200)
+            expect(res2.body[0].title).to.equal("good title")
+            expect(res2.body[0].diff).to.equal(1)
+            expect(res2.body[1].title).to.equal("bad title")
+
+        }),
+
+        it('(POST /thread/filter) should filter correctly on comments', async function() {
+
+            const testUser = await new User({
+                username: 'thread_test_username',
+                password: 'password'            
+            }).save()
+
+            const testThread = await new Thread ({
+                username: testUser.username,
+                title: "good title",
+                content: "content"
+            }).save()
+
+            const testThread2 = await new Thread ({
+                username: testUser.username,
+                title: "bad title",
+                content: "content"
+            }).save()
+
+            const testComment = {
+                threadId: testThread.id,
+                username: "username of the comment",
+                content: "content of the comment"
+            }
+
+            const res = await requester.post('/comment').send(testComment)
+
+            res2 = await requester.post('/thread/filter').send({filter: "comments"})
+            expect(res2).to.have.status(200)
+            expect(res2.body[0].title).to.equal("good title")
+            expect(res2.body[0].comments).to.equal(1)
+            expect(res2.body[1].title).to.equal("bad title")
+            expect(res2.body[1].comments).to.equal(0)
+
+        }),
+
+        it('(POST /thread/filter) with not known filter should return 401', async function() {
+
+            res = await requester.post('/thread/filter').send({filter: "test"})
+            expect(res).to.have.status(401)
+            expect(res.body.message).to.equal("filter not found")
+
+        }),
 
     describe('system tests', function() {
         it('should create and retrieve a thread', async function() {
