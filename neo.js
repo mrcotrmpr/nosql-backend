@@ -27,5 +27,6 @@ module.exports = {
     dislikeThread: 'MATCH(:User {id: $username})-[r:LIKES]-(:Thread{id: $threadId}) DELETE r',
     befriend: 'MERGE (u1:User {id: $username1}) MERGE (u2:User {id:$username2}) MERGE (u1)-[:FRIENDS]-(u2)',
     defriend: 'MATCH(:User {id: $username1})-[r:FRIENDS]-(:User{id: $username2}) DELETE r',
-    getLikedFromFriends: 'MATCH(u:User{id: $username})-[:FRIENDS]-(u2:User) MATCH(u2)-[:LIKES]->(t:Thread) RETURN DISTINCT t'
+    getLikedFromFriendsDepth1: 'MATCH(u:User{id: $username})-[:FRIENDS]-(u2:User) MATCH(u2)-[:LIKES]->(t:Thread) RETURN DISTINCT t',
+    getLikedFromFriendsDepth2: 'MATCH(u:User{id: $username})-[:FRIENDS]-(u2:User) MATCH(u2)-[:FRIENDS]-(u3:User) MATCH(u3)-[:LIKES]->(t:Thread) RETURN DISTINCT t'
 }

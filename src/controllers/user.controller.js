@@ -121,19 +121,28 @@ module.exports = {
 
     async getRecommendations(req, res, next){
         const session = neo.session()
+        let result
 
-        const result = await session.run(neo.getLikedFromFriends, {
-            username: req.body.username.toString()
-        })
+        if(req.body.depth == "1" || req.body.depth == "2"){
+            if(req.body.depth == "1"){
+                result = await session.run(neo.getLikedFromFriendsDepth1, {
+                    username: req.body.username.toString()
+                })
+            } else if(req.body.depth == "2"){
+                result = await session.run(neo.getLikedFromFriendsDepth2, {
+                    username: req.body.username.toString()
+                })
+            }
 
-        const recommendations = []
-        for(let record of result.records) {
-            recommendations.push(record.get('t').properties.name)
+            const recommendations = []
+            for(let record of result.records) {
+                recommendations.push(record.get('t').properties.name)
+            }
+    
+            session.close()
+            res.status(200).send({recommendations: recommendations});
+        } else {
+            res.status(204).send();
         }
-   
-       session.close()
-       res.status(200).send({recommendations: recommendations});
-
     }
-
 }

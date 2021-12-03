@@ -18,7 +18,6 @@ function createQueries() {
     ]
 }
 
-
 describe('user endpoints', function() {
     describe('integration tests', function() {
 
@@ -207,18 +206,16 @@ describe('user endpoints', function() {
         })
 
         it('(POST user/recommendations) gives simple recommendations', async function() {
-            const res = await requester.post('/user/recommendations').send({username: "username1"})
+            const res = await requester.post('/user/recommendations').send({username: "username1", depth: "1"})
 
             expect(res.body).to.have.have.property("recommendations").and.to.be.lengthOf(1)
             expect(res).to.have.status(200)
             expect(res.body).to.have.have.property("recommendations").and.to.contain("test thread 1")
         })
 
-        it('(POST user/recommendations) with no recommendations returns an empty list', async function() {
+        it('(POST user/recommendations) with no depth returns 204', async function() {
             const res = await requester.post('/user/recommendations').send({username: "username2"})
-
-            expect(res).to.have.status(200)
-            expect(res.body).to.have.have.property("recommendations").and.to.be.lengthOf(0)
+            expect(res).to.have.status(204)
         })
         
 
