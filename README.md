@@ -28,4 +28,3 @@ To run all tests use `npm test`. There are three kinds of tests:
 - Be able to query threads your friends liked (depth 2)
 - Richardson maturity level 2
 - Make tests prettier
-- Test filter
