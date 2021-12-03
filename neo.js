@@ -21,7 +21,7 @@ module.exports = {
     dropAll: 'MATCH (n) DETACH DELETE n',
     saveUser: 'CREATE (u:User {id: $username})',
     deleteUser: 'MATCH(u:User {id: $username}) DETACH DELETE u',
-    saveThread: 'CREATE (t:Thread {name:$threadTitle, id: $threadId,})',
+    saveThread: 'CREATE (t:Thread {name:$threadTitle, id: $threadId})',
     deleteThread: 'MATCH(t:Thread {id: $threadId}) DETACH DELETE t',
     likeThread: 'MERGE (u:User {id: $username}) MERGE (t:Thread {id:$threadId}) MERGE (u)-[:LIKES]->(t)',
     dislikeThread: 'MATCH(:User {id: $username})-[r:LIKES]-(:Thread{id: $threadId}) DELETE r',
