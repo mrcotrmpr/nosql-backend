@@ -27,7 +27,7 @@ describe('user model', function() {
             await expect(user.save()).to.be.rejectedWith(Error)
     
             let count = await User.find().countDocuments()
-            expect(count).to.equal(1)
+            expect(count).to.equal(1) 
         })
     })
 })
