@@ -76,9 +76,9 @@ module.exports = {
                 const session = neo.session()
 
                 if(thread.downvotes.includes(req.body.username)){
-                    Thread.findByIdAndUpdate({_id: req.body.id}, {$pull: {downvotes: req.body.username}}, {upsert: true}, function(){})
+                    Thread.findByIdAndUpdate({_id: req.body.id}, {$pull: {downvotes: req.body.username}, $inc: {count_downvotes: -1}}, {upsert: true}, function(){})
                 }
-                Thread.findByIdAndUpdate({_id: req.body.id}, {$push: {upvotes: req.body.username}}, {upsert: true}, function(err, doc) {
+                Thread.findByIdAndUpdate({_id: req.body.id}, {$push: {upvotes: req.body.username}, $inc: {count_upvotes: 1}}, {upsert: true}, function(err, doc) {
                     session.run(neo.likeThread, {
                         username: req.body.username,
                         threadId: req.body.id
@@ -102,9 +102,9 @@ module.exports = {
                 const session = neo.session()
 
                 if(thread.upvotes.includes(req.body.username)){
-                    Thread.findByIdAndUpdate({_id: req.body.id}, {$pull: {upvotes: req.body.username}}, {upsert: true}, function() {})
+                    Thread.findByIdAndUpdate({_id: req.body.id}, {$pull: {upvotes: req.body.username}, $inc: {count_upvotes: -1}}, {upsert: true}, function() {})
                 }
-                Thread.findByIdAndUpdate({_id: req.body.id}, {$push: {downvotes: req.body.username}}, {upsert: true}, function(err, doc) {
+                Thread.findByIdAndUpdate({_id: req.body.id}, {$push: {downvotes: req.body.username}, $inc: {count_downvotes: 1}}, {upsert: true}, function(err, doc) {
                     session.run(neo.dislikeThread, {
                         username: req.body.username,
                         threadId: req.body.id
@@ -118,7 +118,7 @@ module.exports = {
     async filterQuery(req, res, next){
 
         if(req.body.filter == "upvotes"){
-            result = await Thread.find().sort({"upvotes": -1}).select('-comments')
+            result = await Thread.find().sort({"count_upvotes": -1}).select('-comments')
             return res.status(200).send(result)
         }
 

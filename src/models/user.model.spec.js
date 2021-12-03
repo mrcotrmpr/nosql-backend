@@ -22,7 +22,7 @@ describe('user model', function() {
     
         it('should not create duplicate usernames', async function() {
             await new User({username: 'username', password: 'password'}).save()
-            const user = new User({username: 'username'})
+            const user = new User({username: 'username', password: 'password'})
             
             await expect(user.save()).to.be.rejectedWith(Error)
     

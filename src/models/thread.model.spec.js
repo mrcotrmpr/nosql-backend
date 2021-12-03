@@ -44,5 +44,17 @@ describe('thread model', function() {
             expect(thread).to.have.property('downvotes').and.to.be.empty
         })
         
+        it('should have 0 upvotes by default', async function() {
+            const thread = new Thread({username:'user', title: 'title', content:'content'})
+    
+            expect(thread).to.have.property('count_upvotes').and.to.equal(0)
+        })
+
+        it('should have 0 downvotes by default', async function() {
+            const thread = new Thread({username:'user', title: 'title', content:'content'})
+    
+            expect(thread).to.have.property('count_downvotes').and.to.equal(0)
+        })
+
     })
 })

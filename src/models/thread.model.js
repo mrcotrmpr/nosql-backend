@@ -2,7 +2,6 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const _ = require('underscore');
 
-const opts = { toJSON: { virtuals: true, transform: function (doc, ret) { delete ret.id }}};
 const ThreadSchema = new Schema({
     username: {
         type: String,
@@ -31,16 +30,17 @@ const ThreadSchema = new Schema({
         type: Schema.Types.String,
         ref: 'user',
         default: []
-        }]
-}, opts)
-
-ThreadSchema.virtual('count_upvotes').get(function () {
-    return this.upvotes.length
+        }],
+    count_upvotes: {
+        type: Number,
+        default: 0
+    },
+    count_downvotes: {
+        type: Number,
+        default: 0
+    }
 })
 
-ThreadSchema.virtual('count_downvotes').get(function () {
-    return this.downvotes.length
-})
 
 // check for unique id's in up- and downvotes
 ThreadSchema.pre('save', function (next) {
