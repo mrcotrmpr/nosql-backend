@@ -56,7 +56,12 @@ ThreadSchema.plugin(require('mongoose-autopopulate'));
 // remove all comments on delete
 ThreadSchema.pre('remove', function(next) {
     const Comment = mongoose.model('comment')
+    const Subcomment = mongoose.model('subcomment')
+
     Comment.remove({threadId: this._id}).exec();
+    this.comments.forEach(element => {
+        Subcomment.remove({commentId: element._id}).exec()
+    });
     next();
 })
 

@@ -21,9 +21,3 @@ To run all tests use `npm test`. There are three kinds of tests:
 - unit tests on the schemas
 - integration tests on the endpoints
 - system tests by walking through a 'user journey'
-
-### TODO:
-
-- Remove subcomments when removing a thread along with its comments
-- Richardson maturity level 2
-- Make tests prettier
