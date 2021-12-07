@@ -8,8 +8,28 @@ const Comment = require('../models/comment.model')
 const Thread = require('../models/thread.model')
 const User = require('../models/user.model')
 
-describe('comment endpoints', function() {
+describe('subcomment endpoints', function() {
     describe('integration tests', function() {
+        let testUser
+        let testThread
+        let testComment
+
+        beforeEach(async function() {
+            testUser = await new User({
+                username: 'subcomment_test_username',
+                password: 'password'            
+            }).save()
+            testThread = await new Thread ({
+                username: testUser.username,
+                title: "title",
+                content: "content"
+            }).save()
+            testComment = await new Comment ({
+                threadId: testThread.id,
+                username: "username of the comment",
+                content: "content of the comment"
+            }).save()
+        })
 
         it('(POST /subcomment) should create a subcomment', async function() {
             const testSubcomment = {
@@ -46,18 +66,6 @@ describe('comment endpoints', function() {
         })
     
         it('(POST /subcomment) should not create a subcomment with missing username', async function() {
-            testThread = await new Thread ({
-                username: "username",
-                title: "title",
-                content: "content"
-            }).save()
-            
-            testComment = await new Comment ({
-                threadId: testThread.id,
-                username: "username of the comment",
-                content: "content of the comment"
-            }).save()
-
             const testSubcomment = {
                 commentId: testComment.id,
                 content: "content of the comment"
@@ -74,18 +82,6 @@ describe('comment endpoints', function() {
 
         
         it('(DELETE /subcomment/:id) should delete a subcomment', async function() {
-            testThread = await new Thread ({
-                username: "username",
-                title: "title",
-                content: "content"
-            }).save()
-            
-            testComment = await new Comment ({
-                threadId: testThread.id,
-                username: "username of the comment",
-                content: "content of the comment"
-            }).save()
-
             const testSubcomment = new Subcomment ({
                 commentId: testComment.id,
                 content: "content of the comment",
@@ -106,27 +102,6 @@ describe('comment endpoints', function() {
         })
 
         it('(POST /subcomment/upvote) should upvote a comment', async function() {
-            const testUser = await new User({
-                username: 'subcomment_test_username',
-                password: 'password'            
-            }).save()
-
-            const testThread = new Thread ({
-                username: testUser.username,
-                title: "title",
-                content: "content"
-            })
-
-            await testThread.save()
-
-            const testComment = new Comment({
-                threadId: testThread.id,
-                username: testUser.username,
-                content: "content of the comment"
-            })
-
-            await testComment.save()
-
             const testSubcomment = new Subcomment({
                 commentId: testComment.id,
                 username: testUser.username,
@@ -143,27 +118,6 @@ describe('comment endpoints', function() {
         })
 
         it('(POST /subcomment/downvote) should downvote a comment', async function() {
-            const testUser = await new User({
-                username: 'subcomment_test_username',
-                password: 'password'            
-            }).save()
-
-            const testThread = new Thread ({
-                username: testUser.username,
-                title: "title",
-                content: "content"
-            })
-
-            await testThread.save()
-
-            const testComment = new Comment({
-                threadId: testThread.id,
-                username: testUser.username,
-                content: "content of the comment"
-            })
-
-            await testComment.save()
-
             const testSubcomment = new Subcomment({
                 commentId: testComment.id,
                 username: testUser.username,
@@ -181,22 +135,6 @@ describe('comment endpoints', function() {
 
     describe('system tests', function() {
         it('should create and retrieve a sub comment', async function() {
-            const testThread = new Thread ({
-                username: "username",
-                title: "title",
-                content: "content"
-            })
-
-            await testThread.save()
-
-            const testComment = new Comment({
-                threadId: testThread.id,
-                username: "username of the comment",
-                content: "content of the comment"
-            })
-
-            await testComment.save()
-
             const testSubcomment = {
                 commentId: testComment.id,
                 username: "username of the subcomment",
