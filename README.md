@@ -21,3 +21,9 @@ To run all tests use `npm test`. There are three kinds of tests:
 - unit tests on the schemas
 - integration tests on the endpoints
 - system tests by walking through a 'user journey'
+
+### TODO
+
+- Richardson 2
+- Check if user exists in create
+- Check if id exists in create
