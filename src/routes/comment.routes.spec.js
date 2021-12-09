@@ -11,8 +11,13 @@ describe('comment endpoints', function() {
     describe('integration tests', function() {
 
         it('(POST /comment) should create a comment', async function() {
-            const testThread = new Thread ({
+            const testUser = await new User({
                 username: "username",
+                password: "password"
+            }).save()
+
+            const testThread = new Thread ({
+                username: testUser.username,
                 title: "title",
                 content: "content"
             })
@@ -21,7 +26,7 @@ describe('comment endpoints', function() {
 
             const testComment = {
                 threadId: testThread.id,
-                username: "username of the comment",
+                username: testUser.username,
                 content: "content of the comment"
             }
 
@@ -38,14 +43,19 @@ describe('comment endpoints', function() {
         })
 
         it('(POST /comment) should not create a comment with missing threadId', async function() {
+            const testUser = await new User({
+                username: "username",
+                password: "password"
+            }).save()
+
             const testComment = {
-                username: "username of the comment",
+                username: "username",
                 content: "content of the comment"
             }
     
             const res = await requester.post('/comment').send(testComment)
     
-            expect(res).to.have.status(400)
+            expect(res).to.have.status(204)
     
             const count = await Comment.find().countDocuments()
             expect(count).to.equal(0)
@@ -68,7 +78,7 @@ describe('comment endpoints', function() {
     
             const res = await requester.post('/comment').send(testComment)
     
-            expect(res).to.have.status(400)
+            expect(res).to.have.status(204)
     
             const count = await Comment.find().countDocuments()
             expect(count).to.equal(0)
@@ -76,8 +86,13 @@ describe('comment endpoints', function() {
         })
 
         it('(POST /comment) should not create a comment with missing content', async function() {
-            const testThread = new Thread ({
+            const testUser = await new User({
                 username: "username",
+                password: "password"
+            }).save()
+            
+            const testThread = new Thread ({
+                username: testUser.username,
                 title: "title",
                 content: "content"
             })
@@ -86,7 +101,7 @@ describe('comment endpoints', function() {
 
             const testComment = {
                 threadId: testThread.id,
-                username: "username of the comment",
+                username: testUser.username,
             }
     
             const res = await requester.post('/comment').send(testComment)
@@ -99,8 +114,13 @@ describe('comment endpoints', function() {
         })
 
         it('(DELETE /comment/:id) should delete a comment', async function() {
-            const testThread = new Thread ({
+            const testUser = await new User({
                 username: "username",
+                password: "password"
+            }).save()
+
+            const testThread = new Thread ({
+                username: testUser.username,
                 title: "title",
                 content: "content"
             })
@@ -109,7 +129,7 @@ describe('comment endpoints', function() {
 
             const testComment = new Comment({
                 threadId: testThread.id,
-                username: "username of the comment",
+                username: testUser.username,
                 content: "content of the comment"
             })
 
@@ -261,8 +281,13 @@ describe('comment endpoints', function() {
 
     describe('system tests', function() {
         it('should create and retrieve a comment', async function() {
-            const testThread = new Thread ({
+            const testUser = await new User({
                 username: "username",
+                password: "password"
+            }).save()
+
+            const testThread = new Thread ({
+                username: testUser.username,
                 title: "title",
                 content: "content"
             })
@@ -271,7 +296,7 @@ describe('comment endpoints', function() {
 
             const testComment = {
                 threadId: testThread.id,
-                username: "username of the comment",
+                username: testUser.username,
                 content: "content of the comment"
             }
 

@@ -1,20 +1,28 @@
 const Comment = require('../models/comment.model')
 const Thread = require('../models/thread.model')
+const User = require('../models/user.model')
 
 module.exports = {
 
     async create(req, res, next){
         const commentProps = req.body;
-        await Comment.create(commentProps)
-         .then((comment) => {
-            if(Thread.findById(comment.threadId)){
-            Thread.findByIdAndUpdate({_id: comment.threadId}, {$push: {comments: comment._id}}, {upsert: true}, function(err, doc) {
-                return res.status(200).send(comment);
-            });
-            } else {
-                return res.status(204).send({message: "invalid thread id"});
-            }
-        })
+        const thread = await Thread.findOne({_id: commentProps.threadId})
+        const user = await User.findOne({username: commentProps.username})
+        
+        if(thread != null && user != null){
+            await Comment.create(commentProps)
+            .then((comment) => {
+               if(Thread.findById(comment.threadId)){
+               Thread.findByIdAndUpdate({_id: comment.threadId}, {$push: {comments: comment._id}}, {upsert: true}, function(err, doc) {
+                   return res.status(200).send(comment);
+               });
+               } else {
+                   return res.status(204).send({message: "invalid thread id"});
+               }
+           })
+        } else if(thread == null || user == null) {
+            return res.status(204).send()
+        }
     },
 
     async getOne (req, res, next) {

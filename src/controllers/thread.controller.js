@@ -5,19 +5,24 @@ const neo = require('../../neo')
 module.exports = {
 
     async create(req, res, next){
-
         const threadProps = req.body;
-        await Thread.create(threadProps)
-         .then(thread => {
-            const session = neo.session()
-
-            session.run(neo.saveThread, {
-                threadId: thread.id.toString(),
-                threadTitle: thread.title.toString()
+        const user = await User.findOne({username: threadProps.username})
+        if(user != null){
+            await Thread.create(threadProps)
+            .then(thread => {
+               const session = neo.session()
+   
+               session.run(neo.saveThread, {
+                   threadId: thread.id.toString(),
+                   threadTitle: thread.title.toString()
+               })
+           
+               res.status(201).send(thread)
             })
-        
-            res.status(201).send(thread)
-         })
+        } else if(user == null){
+            return res.status(204).send()
+        }
+
     },
 
     async getOne (req, res, next) {

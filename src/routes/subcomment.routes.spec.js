@@ -12,9 +12,30 @@ describe('comment endpoints', function() {
     describe('integration tests', function() {
 
         it('(POST /subcomment) should create a subcomment', async function() {
+            const testUser = await new User({
+                username: "username",
+                password: "password"
+            }).save()
+
+            const testThread = new Thread ({
+                username: "username",
+                title: "title",
+                content: "content"
+            })
+
+            await testThread.save()
+
+            const testComment = new Comment ({ 
+                threadId: testThread.id,
+                username: "username",
+                content: "content of the comment"
+            })
+
+            await testComment.save()
+
             const testSubcomment = {
                 commentId: testComment.id,
-                username: "username of the comment",
+                username: "username",
                 content: "content of the comment"
             }
 
@@ -31,14 +52,19 @@ describe('comment endpoints', function() {
         })
 
         it('(POST /subcomment) should not create a subcomment with missing commentId', async function() {
+            const testUser = await new User({
+                username: "username",
+                password: "password"
+            }).save()
+
             const testSubcomment = {
-                username: "username of the comment",
+                username: "username",
                 content: "content of the comment"
             }
     
             const res = await requester.post('/subcomment').send(testSubcomment)
     
-            expect(res).to.have.status(400)
+            expect(res).to.have.status(204)
     
             const count = await Subcomment.find().countDocuments()
             expect(count).to.equal(0)
@@ -65,7 +91,7 @@ describe('comment endpoints', function() {
     
             const res = await requester.post('/subcomment').send(testSubcomment)
     
-            expect(res).to.have.status(400)
+            expect(res).to.have.status(204)
     
             const count = await Subcomment.find().countDocuments()
             expect(count).to.equal(0)
@@ -181,8 +207,13 @@ describe('comment endpoints', function() {
 
     describe('system tests', function() {
         it('should create and retrieve a sub comment', async function() {
-            const testThread = new Thread ({
+            const testUser = await new User({
                 username: "username",
+                password: "password"
+            }).save()
+
+            const testThread = new Thread ({
+                username: testUser.username,
                 title: "title",
                 content: "content"
             })
@@ -191,7 +222,7 @@ describe('comment endpoints', function() {
 
             const testComment = new Comment({
                 threadId: testThread.id,
-                username: "username of the comment",
+                username: testUser.username,
                 content: "content of the comment"
             })
 
@@ -199,7 +230,7 @@ describe('comment endpoints', function() {
 
             const testSubcomment = {
                 commentId: testComment.id,
-                username: "username of the subcomment",
+                username: testUser.username,
                 content: "content of the subcomment"
             }
 

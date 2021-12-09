@@ -10,6 +10,11 @@ describe('thread endpoints', function() {
     describe('integration tests', function() {
 
         it('(POST /thread) should create a thread', async function() {
+            const testUser = await new User({
+                username: "username",
+                password: "password"
+            }).save()
+
             const testThread = {
                 username: "username",
                 title: "title",
@@ -28,7 +33,12 @@ describe('thread endpoints', function() {
             expect(thread).to.have.property('comments').and.to.be.empty
         })
 
-        it('(POST /thread) should create a thread with a promise chain', function() {
+        it('(POST /thread) should create a thread with a promise chain', async function() {
+            const testUser = await new User({
+                username: "username",
+                password: "password"
+            }).save()
+
             const testThread = {
                 username: "username",
                 title: "title",
@@ -59,7 +69,7 @@ describe('thread endpoints', function() {
     
             const res = await requester.post('/thread').send(testThread)
     
-            expect(res).to.have.status(400)
+            expect(res).to.have.status(204)
     
             const count = await Thread.find().countDocuments()
             expect(count).to.equal(0)
@@ -73,7 +83,7 @@ describe('thread endpoints', function() {
     
             const res = await requester.post('/thread').send(testThread)
     
-            expect(res).to.have.status(400)
+            expect(res).to.have.status(204)
     
             const count = await Thread.find().countDocuments()
             expect(count).to.equal(0)
@@ -88,7 +98,7 @@ describe('thread endpoints', function() {
     
             const res = await requester.post('/thread').send(testThread)
     
-            expect(res).to.have.status(400)
+            expect(res).to.have.status(204)
     
             const count = await Thread.find().countDocuments()
             expect(count).to.equal(0)
@@ -328,7 +338,6 @@ describe('thread endpoints', function() {
         }),
 
         it('(POST /thread/filter) should filter correctly on comments', async function() {
-
             const testUser = await new User({
                 username: 'thread_test_username',
                 password: 'password'            
@@ -348,7 +357,7 @@ describe('thread endpoints', function() {
 
             const testComment = {
                 threadId: testThread.id,
-                username: "username of the comment",
+                username: testUser.username,
                 content: "content of the comment"
             }
 
@@ -373,6 +382,11 @@ describe('thread endpoints', function() {
 
     describe('system tests', function() {
         it('should create and retrieve a thread', async function() {
+            const testUser = await new User({
+                username: "username",
+                password: "password"
+            }).save()
+
             const testThread = {
                 username: "username",
                 title: "title",

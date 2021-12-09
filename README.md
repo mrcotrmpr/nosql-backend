@@ -25,5 +25,3 @@ To run all tests use `npm test`. There are three kinds of tests:
 ### TODO
 
 - Richardson 2
-- Check if user exists in create
-- Check if id exists in create
