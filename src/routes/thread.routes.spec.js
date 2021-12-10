@@ -406,4 +406,51 @@ describe('thread endpoints', function() {
             expect(res2.body).to.have.property('content', testThread.content)
             expect(res2.body).to.have.property('comments').and.to.be.empty
         })
+
+
+        it('should create and upvote a thread', async function*() {
+            const testUser = await new User({
+                username: "username",
+                password: "password"
+            }).save()
+
+            const testThread = new Thread ({
+                username: testUser.username,
+                title: "title",
+                content: "content"
+            })
+
+            const res2 = await requester.post('/thread').send(testThread)
+            expect(res2).to.have.status(200)
+            expect(res2.body).to.have.property('_id')
+
+            res = await requester.post('/thread/upvote').send({id: testThread.id, username:testUser.username})
+            expect(res).to.have.status(200)
+
+            await Thread.findById(testThread.id)
+            .then(thread => expect(thread).to.have.property('upvotes').and.have.lengthOf(1))
+        })
+
+        it('should create and downvote a thread', async function*() {
+            const testUser = await new User({
+                username: "username",
+                password: "password"
+            }).save()
+
+            const testThread = new Thread ({
+                username: testUser.username,
+                title: "title",
+                content: "content"
+            })
+
+            const res2 = await requester.post('/thread').send(testThread)
+            expect(res2).to.have.status(200)
+            expect(res2.body).to.have.property('_id')
+
+            res = await requester.post('/thread/downvote').send({id: testThread.id, username:testUser.username})
+            expect(res).to.have.status(200)
+
+            await Thread.findById(testThread.id)
+            .then(thread => expect(thread).to.have.property('downvotes').and.have.lengthOf(1))
+        })
 })

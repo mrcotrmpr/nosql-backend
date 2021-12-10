@@ -312,4 +312,68 @@ describe('comment endpoints', function() {
             expect(res3.body).to.have.property('content', testComment.content)
             expect(res3.body).to.have.property('subcomments').and.to.be.empty
         })
+
+        it('should create and upvote a comment', async function*() {
+            const testUser = await new User({
+                username: "username",
+                password: "password"
+            }).save()
+
+            const testThread = new Thread ({
+                username: testUser.username,
+                title: "title",
+                content: "content"
+            })
+
+            await testThread.save()
+
+            const testComment = {
+                threadId: testThread.id,
+                username: testUser.username,
+                content: "content of the comment"
+            }
+
+            const res2 = await requester.post('/comment').send(testComment)
+            expect(res2).to.have.status(200)
+            expect(res2.body).to.have.property('_id')
+
+            res = await requester.post('/comment/upvote').send({id: testComment.id, username:testUser.username})
+            expect(res).to.have.status(200)
+
+            await Comment.findById(testComment.id)
+            .then(comment => expect(comment).to.have.property('upvotes').and.have.lengthOf(1))
+        })
+
+        it('should create and downvote a comment', async function*() {
+            const testUser = await new User({
+                username: "username",
+                password: "password"
+            }).save()
+
+            const testThread = new Thread ({
+                username: testUser.username,
+                title: "title",
+                content: "content"
+            })
+
+            await testThread.save()
+
+            const testComment = {
+                threadId: testThread.id,
+                username: testUser.username,
+                content: "content of the comment"
+            }
+
+            const res2 = await requester.post('/comment').send(testComment)
+            expect(res2).to.have.status(200)
+            expect(res2.body).to.have.property('_id')
+
+            res = await requester.post('/comment/downvote').send({id: testComment.id, username:testUser.username})
+            expect(res).to.have.status(200)
+
+            await Comment.findById(testComment.id)
+            .then(comment => expect(comment).to.have.property('downvotes').and.have.lengthOf(1))
+        })
+
+
 })

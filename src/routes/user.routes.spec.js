@@ -237,5 +237,51 @@ describe('user endpoints', function() {
             expect(res2.body).to.have.property('username', testUser.username)
             expect(res2.body).to.have.property('password', testUser.password)
         })
+
+        it('should create and change a user its password', async function() {
+            const testUser = {
+                username: 'username',
+                password: 'password'
+            }
+
+            const res1 = await requester.post('/user').send(testUser)
+            expect(res1).to.have.status(201)
+            expect(res1.body).to.have.property('_id')
+
+            const user = await User.findOne({username: testUser.username})
+            .then(user => expect(user.password).to.equal('password'))
+
+            const testUser2 = {
+                username: 'username',
+                password: 'password',
+                newPassword: 'newPassword'
+            }
+            const res = await requester.post('/user/password').send(testUser2)
+    
+            expect(res).to.have.status(200)
+            await User.findOne({username: testUser.username})
+            .then(user => expect(user.password).to.equal('newPassword'))
+        })
+
+        it('should create and befriend 2 users', async function() {
+            const testUser = {
+                username: 'username1',
+                password: 'password'
+            }
+            const res1 = await requester.post('/user').send(testUser)
+            expect(res1).to.have.status(201)
+
+            const testUser2 = {
+                username: 'username2',
+                password: 'password'
+            }
+            const res2 = await requester.post('/user').send(testUser2)
+            expect(res2).to.have.status(201)
+
+            const res3 = await requester.post('/user/befriend').send({username1: testUser.username, username2: testUser2.username})
+
+            expect(res3.body).to.have.have.property("message").and.to.equal("friendship initialized")
+            expect(res3).to.have.status(200)
+        })
     })
 })

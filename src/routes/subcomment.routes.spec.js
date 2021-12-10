@@ -247,4 +247,82 @@ describe('comment endpoints', function() {
             expect(res2.body).to.have.property('content', testSubcomment.content)
             expect(res2.body).to.have.property('subcomments').and.to.be.empty
         })
+
+        it('should create and upvote a subcomment', async function*() {
+            const testUser = await new User({
+                username: "username",
+                password: "password"
+            }).save()
+
+            const testThread = new Thread ({
+                username: testUser.username,
+                title: "title",
+                content: "content"
+            })
+
+            await testThread.save()
+
+            const testComment = {
+                threadId: testThread.id,
+                username: testUser.username,
+                content: "content of the comment"
+            }
+
+            const res2 = await requester.post('/comment').send(testComment)
+            expect(res2).to.have.status(200)
+
+            const testSubcomment = {
+                commentId: testComment.id,
+                username: testUser.username,
+                content: "content of the subcomment"
+            }
+
+            const res = await requester.post('/subcomment').send(testSubcomment)
+            expect(res).to.have.status(200)
+
+            res = await requester.post('/subcomment/upvote').send({id: testComment.id, username:testUser.username})
+            expect(res).to.have.status(200)
+
+            await Subcomment.findById(testSubcomment.id)
+            .then(subcomment => expect(subcomment).to.have.property('upvotes').and.have.lengthOf(1))
+        })
+
+        it('should create and downvote a subcomment', async function*() {
+            const testUser = await new User({
+                username: "username",
+                password: "password"
+            }).save()
+
+            const testThread = new Thread ({
+                username: testUser.username,
+                title: "title",
+                content: "content"
+            })
+
+            await testThread.save()
+
+            const testComment = {
+                threadId: testThread.id,
+                username: testUser.username,
+                content: "content of the comment"
+            }
+
+            const res2 = await requester.post('/comment').send(testComment)
+            expect(res2).to.have.status(200)
+
+            const testSubcomment = {
+                commentId: testComment.id,
+                username: testUser.username,
+                content: "content of the subcomment"
+            }
+
+            const res = await requester.post('/subcomment').send(testSubcomment)
+            expect(res).to.have.status(200)
+
+            res = await requester.post('/subcomment/downvote').send({id: testComment.id, username:testUser.username})
+            expect(res).to.have.status(200)
+
+            await Subcomment.findById(testSubcomment.id)
+            .then(subcomment => expect(subcomment).to.have.property('downvotes').and.have.lengthOf(1))
+        })
 })
